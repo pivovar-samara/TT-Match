@@ -1,0 +1,5 @@
+// Base build configuration — committed to the repository.
+// Secrets.xcconfig is git-ignored; the optional include is a no-op on fresh
+// checkouts. Copy Config/Secrets.xcconfig.example → Config/Secrets.xcconfig
+// and fill in your Firebase keys to enable Crashlytics and Analytics locally.
+#include? "Secrets.xcconfig"

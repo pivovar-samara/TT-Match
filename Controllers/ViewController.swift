@@ -105,6 +105,7 @@ class ViewController: UIViewController {
     fileprivate func showRestartMatchDialog(_ sender: UIView? = nil) {
         let dialog = UIAlertController(title: L("Shake_ActionSheet_Title"), message: nil, preferredStyle: .actionSheet)
         let resetGameAction = UIAlertAction(title: L("Shake_ActionSheet_Confirm"), style: .destructive, handler: {[weak self] (action) in
+            TTMAnalytics.matchReset()
             TTMMatch.currentMatch.reset()
             self?.updateFromCurrentGame(false, playerAction: nil)
         })
@@ -126,6 +127,7 @@ class ViewController: UIViewController {
             var settings = TTMMatch.currentMatch.settings
             settings.gameCount = 3
             TTMMatch.currentMatch.settings = settings
+            TTMAnalytics.settingsChanged(gameCount: 3)
             self?.updateFromCurrentGame(false, playerAction: nil)
         })
         dialog.addAction(threeGameAction)
@@ -133,6 +135,7 @@ class ViewController: UIViewController {
             var settings = TTMMatch.currentMatch.settings
             settings.gameCount = 5
             TTMMatch.currentMatch.settings = settings
+            TTMAnalytics.settingsChanged(gameCount: 5)
             self?.updateFromCurrentGame(false, playerAction: nil)
         })
         dialog.addAction(fiveGameAction)
@@ -140,6 +143,7 @@ class ViewController: UIViewController {
             var settings = TTMMatch.currentMatch.settings
             settings.gameCount = 7
             TTMMatch.currentMatch.settings = settings
+            TTMAnalytics.settingsChanged(gameCount: 7)
             self?.updateFromCurrentGame(false, playerAction: nil)
         })
         dialog.addAction(sevenGameAction)
@@ -212,6 +216,7 @@ class ViewController: UIViewController {
             TTMSoundManager.sharedManager.playSystemSound(type: TTMSoundType.tapServiceChanged)
             let player = TTMMatchPlayer.rand()
             TTMMatch.currentMatch.firstServe = player
+            TTMAnalytics.matchStarted(gameCount: TTMMatch.currentMatch.settings.gameCount)
             self?.updateFromCurrentGame(false, playerAction: player, handleRandomServe: false)
         }
     }
@@ -246,7 +251,8 @@ class ViewController: UIViewController {
         let hasServe = match.serve != nil
         let gameFinished = match.gameFinished
         let matchFinished = match.matchFinished
-        
+        let isMatchStart = !matchFinished && !hasServe
+
         if matchFinished {
             TTMSoundManager.sharedManager.playSystemSound(type: TTMSoundType.newGame)
             self.setNeedsStatusBarAppearanceUpdate()
@@ -256,12 +262,21 @@ class ViewController: UIViewController {
             if gameFinished {
                 self.buttonsContainer.backgroundColor = UIColor.clear
             }
+            if isMatchStart {
+                TTMAnalytics.matchStarted(gameCount: match.settings.gameCount)
+            }
             match.playerAction(player)
         }
         
         let gameFinishedAfter = match.gameFinished
         let matchFinishedAfter = match.matchFinished
-        
+
+        if !matchFinished && matchFinishedAfter {
+            TTMAnalytics.matchCompleted(gamesPlayed: match.gameScores.count)
+        } else if !gameFinished && gameFinishedAfter {
+            TTMAnalytics.gameCompleted(gameNumber: match.gameScores.count)
+        }
+
         self.updateFromCurrentGame(hasServe && !gameFinished && !matchFinished && !gameFinishedAfter && !matchFinishedAfter, playerAction: player)
         self.disableActions()
     }
@@ -297,6 +312,9 @@ class ViewController: UIViewController {
     }
 
     @objc func cancelLastAction() {
+        if TTMMatch.currentMatch.firstServe != nil {
+            TTMAnalytics.undoUsed()
+        }
         TTMMatch.currentMatch.undo()
         if !TTMMatch.currentMatch.matchFinished {
             self.setNeedsStatusBarAppearanceUpdate()
