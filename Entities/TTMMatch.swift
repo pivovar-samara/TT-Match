@@ -133,7 +133,9 @@ class TTMMatch: AnyObject {
     }
     
     func isCurrentGamePassedHalf() -> Bool {
-        return max(self.currentGameScore[.green] ?? 0, self.currentGameScore[.blue] ?? 0) > 5
+        let currentLeadingScore = max(self.currentGameScore[.green] ?? 0, self.currentGameScore[.blue] ?? 0)
+        let halfWayScore = self.settings.pointCount / 2
+        return currentLeadingScore >= halfWayScore
     }
     
     func gamesScore(_ player: TTMMatchPlayer) -> Int {
