@@ -35,3 +35,7 @@ Thumbs.db
 
 # CocoaPods (not used)
 Pods/
+
+# Firebase secrets — fill in locally or generate on CI from env vars
+Config/Secrets.xcconfig
+GoogleService-Info.plist
