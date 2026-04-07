@@ -1,0 +1,450 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4831DDFE2F841F4700010D5F /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 4831DDFD2F841F4700010D5F /* AppIcon.icon */; };
+		485D8D532F8262F1009BCBE7 /* TTMMatchSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8D522F8262F1009BCBE7 /* TTMMatchSettings.swift */; };
+		485D8D542F8262F1009BCBE7 /* TTMMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8D512F8262F1009BCBE7 /* TTMMatch.swift */; };
+		485D8D612F8263C8009BCBE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 485D8D5B2F8263C8009BCBE7 /* Assets.xcassets */; };
+		485D8D622F8263C8009BCBE7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 485D8D5E2F8263C8009BCBE7 /* Main.storyboard */; };
+		485D8D632F8263C8009BCBE7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 485D8D5D2F8263C8009BCBE7 /* LaunchScreen.storyboard */; };
+		485D8D6D2F82642F009BCBE7 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 485D8D6C2F82642F009BCBE7 /* Localizable.xcstrings */; };
+		485D8D6F2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8D6E2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift */; };
+		A02630A31CDA0D0B00F60C18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */; };
+		A02630A51CDA0D0B00F60C18 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630A41CDA0D0B00F60C18 /* ViewController.swift */; };
+		A02630B51CDA108C00F60C18 /* TTMSelectableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630B41CDA108C00F60C18 /* TTMSelectableButton.swift */; };
+		A02630B71CDA118900F60C18 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630B61CDA118900F60C18 /* UIImageExtensions.swift */; };
+		A02630BB1CDA20EE00F60C18 /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630BA1CDA20EE00F60C18 /* UIColorExtensions.swift */; };
+		A02630BD1CDA35B900F60C18 /* TTMHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630BC1CDA35B900F60C18 /* TTMHelper.swift */; };
+		A02630C01CDA363D00F60C18 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630BF1CDA363D00F60C18 /* UIFontExtensions.swift */; };
+		A02630D21CDB79F500F60C18 /* TTMSoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630D11CDB79F500F60C18 /* TTMSoundManager.swift */; };
+		A02630D41CDB8E6600F60C18 /* TTMConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630D31CDB8E6600F60C18 /* TTMConfig.swift */; };
+		A0B663A11D4BCE570042E3F0 /* TTMSelectableButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0B663A01D4BCE570042E3F0 /* TTMSelectableButton.xib */; };
+		A0B663A61D4BDE790042E3F0 /* TTMGameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B663A41D4BDE790042E3F0 /* TTMGameCell.swift */; };
+		A0B663A71D4BDE790042E3F0 /* TTMGameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0B663A51D4BDE790042E3F0 /* TTMGameCell.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4831DDFD2F841F4700010D5F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		485D8D4F2F8251CA009BCBE7 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
+		485D8D502F8251CA009BCBE7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		485D8D512F8262F1009BCBE7 /* TTMMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTMMatch.swift; sourceTree = "<group>"; };
+		485D8D522F8262F1009BCBE7 /* TTMMatchSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTMMatchSettings.swift; sourceTree = "<group>"; };
+		485D8D5B2F8263C8009BCBE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		485D8D5C2F8263C8009BCBE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		485D8D5D2F8263C8009BCBE7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		485D8D5E2F8263C8009BCBE7 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		485D8D6C2F82642F009BCBE7 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		485D8D6E2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTMVolumeButtonHandler.swift; sourceTree = "<group>"; };
+		A026309F1CDA0D0A00F60C18 /* TT Match.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TT Match.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A02630A41CDA0D0B00F60C18 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A02630B41CDA108C00F60C18 /* TTMSelectableButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMSelectableButton.swift; sourceTree = "<group>"; };
+		A02630B61CDA118900F60C18 /* UIImageExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
+		A02630BA1CDA20EE00F60C18 /* UIColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
+		A02630BC1CDA35B900F60C18 /* TTMHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMHelper.swift; sourceTree = "<group>"; };
+		A02630BF1CDA363D00F60C18 /* UIFontExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExtensions.swift; sourceTree = "<group>"; };
+		A02630D11CDB79F500F60C18 /* TTMSoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMSoundManager.swift; sourceTree = "<group>"; };
+		A02630D31CDB8E6600F60C18 /* TTMConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMConfig.swift; sourceTree = "<group>"; };
+		A0B663A01D4BCE570042E3F0 /* TTMSelectableButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TTMSelectableButton.xib; sourceTree = "<group>"; };
+		A0B663A41D4BDE790042E3F0 /* TTMGameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMGameCell.swift; sourceTree = "<group>"; };
+		A0B663A51D4BDE790042E3F0 /* TTMGameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TTMGameCell.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A026309C1CDA0D0A00F60C18 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		485D8D552F826303009BCBE7 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				485D8D512F8262F1009BCBE7 /* TTMMatch.swift */,
+				485D8D522F8262F1009BCBE7 /* TTMMatchSettings.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		485D8D562F82632B009BCBE7 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				A02630BC1CDA35B900F60C18 /* TTMHelper.swift */,
+				A02630D31CDB8E6600F60C18 /* TTMConfig.swift */,
+				A02630D11CDB79F500F60C18 /* TTMSoundManager.swift */,
+				485D8D6E2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		485D8D572F82633C009BCBE7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A02630B41CDA108C00F60C18 /* TTMSelectableButton.swift */,
+				A0B663A01D4BCE570042E3F0 /* TTMSelectableButton.xib */,
+				A0B663A41D4BDE790042E3F0 /* TTMGameCell.swift */,
+				A0B663A51D4BDE790042E3F0 /* TTMGameCell.xib */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		485D8D582F826345009BCBE7 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				A02630A41CDA0D0B00F60C18 /* ViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		485D8D592F82634F009BCBE7 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A02630B61CDA118900F60C18 /* UIImageExtensions.swift */,
+				A02630BA1CDA20EE00F60C18 /* UIColorExtensions.swift */,
+				A02630BF1CDA363D00F60C18 /* UIFontExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		485D8D5A2F826383009BCBE7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				485D8D5B2F8263C8009BCBE7 /* Assets.xcassets */,
+				485D8D5C2F8263C8009BCBE7 /* Info.plist */,
+				4831DDFD2F841F4700010D5F /* AppIcon.icon */,
+				485D8D5D2F8263C8009BCBE7 /* LaunchScreen.storyboard */,
+				485D8D5E2F8263C8009BCBE7 /* Main.storyboard */,
+				485D8D6C2F82642F009BCBE7 /* Localizable.xcstrings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A02630961CDA0D0A00F60C18 = {
+			isa = PBXGroup;
+			children = (
+				485D8D4F2F8251CA009BCBE7 /* CLAUDE.md */,
+				485D8D502F8251CA009BCBE7 /* README.md */,
+				A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */,
+				485D8D552F826303009BCBE7 /* Entities */,
+				485D8D582F826345009BCBE7 /* Controllers */,
+				485D8D572F82633C009BCBE7 /* Views */,
+				485D8D562F82632B009BCBE7 /* Helpers */,
+				485D8D592F82634F009BCBE7 /* Extensions */,
+				485D8D5A2F826383009BCBE7 /* Resources */,
+				A02630A01CDA0D0A00F60C18 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A02630A01CDA0D0A00F60C18 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A026309F1CDA0D0A00F60C18 /* TT Match.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A026309E1CDA0D0A00F60C18 /* TT Match */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A02630B11CDA0D0B00F60C18 /* Build configuration list for PBXNativeTarget "TT Match" */;
+			buildPhases = (
+				A026309B1CDA0D0A00F60C18 /* Sources */,
+				A026309C1CDA0D0A00F60C18 /* Frameworks */,
+				A026309D1CDA0D0A00F60C18 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TT Match";
+			productName = "TT Match";
+			productReference = A026309F1CDA0D0A00F60C18 /* TT Match.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A02630971CDA0D0A00F60C18 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 2630;
+				ORGANIZATIONNAME = "";
+				TargetAttributes = {
+					A026309E1CDA0D0A00F60C18 = {
+						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0830;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = A026309A1CDA0D0A00F60C18 /* Build configuration list for PBXProject "TT Match" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				ru,
+			);
+			mainGroup = A02630961CDA0D0A00F60C18;
+			packageReferences = (
+			);
+			productRefGroup = A02630A01CDA0D0A00F60C18 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A026309E1CDA0D0A00F60C18 /* TT Match */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A026309D1CDA0D0A00F60C18 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A0B663A11D4BCE570042E3F0 /* TTMSelectableButton.xib in Resources */,
+				485D8D612F8263C8009BCBE7 /* Assets.xcassets in Resources */,
+				485D8D6D2F82642F009BCBE7 /* Localizable.xcstrings in Resources */,
+				4831DDFE2F841F4700010D5F /* AppIcon.icon in Resources */,
+				485D8D622F8263C8009BCBE7 /* Main.storyboard in Resources */,
+				485D8D632F8263C8009BCBE7 /* LaunchScreen.storyboard in Resources */,
+				A0B663A71D4BDE790042E3F0 /* TTMGameCell.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A026309B1CDA0D0A00F60C18 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A02630D21CDB79F500F60C18 /* TTMSoundManager.swift in Sources */,
+				485D8D6F2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift in Sources */,
+				485D8D532F8262F1009BCBE7 /* TTMMatchSettings.swift in Sources */,
+				485D8D542F8262F1009BCBE7 /* TTMMatch.swift in Sources */,
+				A0B663A61D4BDE790042E3F0 /* TTMGameCell.swift in Sources */,
+				A02630A51CDA0D0B00F60C18 /* ViewController.swift in Sources */,
+				A02630D41CDB8E6600F60C18 /* TTMConfig.swift in Sources */,
+				A02630A31CDA0D0B00F60C18 /* AppDelegate.swift in Sources */,
+				A02630BD1CDA35B900F60C18 /* TTMHelper.swift in Sources */,
+				A02630BB1CDA20EE00F60C18 /* UIColorExtensions.swift in Sources */,
+				A02630B51CDA108C00F60C18 /* TTMSelectableButton.swift in Sources */,
+				A02630C01CDA363D00F60C18 /* UIFontExtensions.swift in Sources */,
+				A02630B71CDA118900F60C18 /* UIImageExtensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A02630AF1CDA0D0B00F60C18 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = C4D54UVMTT;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A02630B01CDA0D0B00F60C18 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = C4D54UVMTT;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A02630B21CDA0D0B00F60C18 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = TW4M5HXN5U;
+				INFOPLIST_FILE = Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "TT Match";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.ilyakhokhlov.ttmatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A02630B31CDA0D0B00F60C18 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = TW4M5HXN5U;
+				INFOPLIST_FILE = Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "TT Match";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.ilyakhokhlov.ttmatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A026309A1CDA0D0A00F60C18 /* Build configuration list for PBXProject "TT Match" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A02630AF1CDA0D0B00F60C18 /* Debug */,
+				A02630B01CDA0D0B00F60C18 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A02630B11CDA0D0B00F60C18 /* Build configuration list for PBXNativeTarget "TT Match" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A02630B21CDA0D0B00F60C18 /* Debug */,
+				A02630B31CDA0D0B00F60C18 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A02630971CDA0D0A00F60C18 /* Project object */;
+}
