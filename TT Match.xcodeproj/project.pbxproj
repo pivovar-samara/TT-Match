@@ -34,9 +34,8 @@
 
 /* Begin PBXFileReference section */
 		4831DDFD2F841F4700010D5F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
-		4831DE6E2F8505C800010D5F /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
-		4831DE732F8505C800010D5F /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		4831DE6F2F8505C800010D5F /* TTMAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTMAnalytics.swift; sourceTree = "<group>"; };
+		4831DE732F8505C800010D5F /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		485D8D4F2F8251CA009BCBE7 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 		485D8D502F8251CA009BCBE7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		485D8D512F8262F1009BCBE7 /* TTMMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTMMatch.swift; sourceTree = "<group>"; };
@@ -79,7 +78,6 @@
 			isa = PBXGroup;
 			children = (
 				4831DE732F8505C800010D5F /* Base.xcconfig */,
-				4831DE6E2F8505C800010D5F /* Secrets.xcconfig */,
 			);
 			path = Config;
 			sourceTree = "<group>";
