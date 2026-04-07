@@ -9,8 +9,8 @@ enum TTMAnalytics {
 
     // MARK: - Match lifecycle
 
-    /// Fired when the first point of a new match is about to be scored
-    /// (either after serve randomization or on the first direct score tap).
+    /// Fired when a new match starts and the first server is chosen
+    /// (either via serve randomization or on the first direct score tap).
     static func matchStarted(gameCount: Int) {
         Analytics.logEvent("match_started", parameters: ["game_count": gameCount])
     }
