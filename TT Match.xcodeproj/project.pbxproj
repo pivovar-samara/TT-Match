@@ -35,6 +35,7 @@
 /* Begin PBXFileReference section */
 		4831DDFD2F841F4700010D5F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		4831DE6E2F8505C800010D5F /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		4831DE732F8505C800010D5F /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		4831DE6F2F8505C800010D5F /* TTMAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTMAnalytics.swift; sourceTree = "<group>"; };
 		485D8D4F2F8251CA009BCBE7 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 		485D8D502F8251CA009BCBE7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -77,6 +78,7 @@
 		4831DE712F8505C800010D5F /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				4831DE732F8505C800010D5F /* Base.xcconfig */,
 				4831DE6E2F8505C800010D5F /* Secrets.xcconfig */,
 			);
 			path = Config;
@@ -419,7 +421,7 @@
 		};
 		A02630B21CDA0D0B00F60C18 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4831DE6E2F8505C800010D5F /* Secrets.xcconfig */;
+			baseConfigurationReference = 4831DE732F8505C800010D5F /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -445,7 +447,7 @@
 		};
 		A02630B31CDA0D0B00F60C18 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4831DE6E2F8505C800010D5F /* Secrets.xcconfig */;
+			baseConfigurationReference = 4831DE732F8505C800010D5F /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
