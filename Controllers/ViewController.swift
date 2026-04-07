@@ -312,7 +312,9 @@ class ViewController: UIViewController {
     }
 
     @objc func cancelLastAction() {
-        TTMAnalytics.undoUsed()
+        if TTMMatch.currentMatch.firstServe != nil {
+            TTMAnalytics.undoUsed()
+        }
         TTMMatch.currentMatch.undo()
         if !TTMMatch.currentMatch.matchFinished {
             self.setNeedsStatusBarAppearanceUpdate()
