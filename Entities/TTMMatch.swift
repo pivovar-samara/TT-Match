@@ -59,10 +59,10 @@ class TTMMatch: AnyObject {
     }
     
     var players: [TTMMatchPlayer] {
-        if self.gameScores.count % 2 == 1 {
-            return [.green, .blue]
-        } else {
+        if self.gameScores.count % 2 == 0 || (self.isFinalGame() && self.isCurrentGamePassedHalf()) {
             return [.blue, .green]
+        } else {
+            return [.green, .blue]
         }
     }
     
@@ -126,6 +126,14 @@ class TTMMatch: AnyObject {
         case .blue:
             return self.currentGameScore[.blue]!
         }
+    }
+    
+    func isFinalGame() -> Bool {
+        return self.gameScores.count == self.settings.gameCount
+    }
+    
+    func isCurrentGamePassedHalf() -> Bool {
+        return max(self.currentGameScore[.green] ?? 0, self.currentGameScore[.blue] ?? 0) > 5
     }
     
     func gamesScore(_ player: TTMMatchPlayer) -> Int {
