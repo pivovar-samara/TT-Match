@@ -43,6 +43,7 @@ final class TTMVolumeButtonHandler {
     private var lastSetVolume: Float = -1
 
     private var isStarted = false
+    private var disableHUD = false
     private var isObserving = false   // guards against duplicate observer registration
     private var appIsActive = true
     private var isAdjustingEdgeVolume = false
@@ -69,6 +70,7 @@ final class TTMVolumeButtonHandler {
     func start(_ disableSystemVolumeHUD: Bool) {
         guard !isStarted else { return }
         isStarted = true
+        disableHUD = disableSystemVolumeHUD
 
         if disableSystemVolumeHUD {
             addVolumeViewToKeyWindow()
@@ -191,9 +193,12 @@ final class TTMVolumeButtonHandler {
 
     /// Inserts the off-screen MPVolumeView into the foreground key window.
     /// Using UIWindowScene avoids the deprecated UIApplication.windows API.
+    /// Falls back to any connected window scene: during viewDidLoad the scene
+    /// is still foregroundInactive, so the window may not be key yet.
     private func addVolumeViewToKeyWindow() {
-        let scene = UIApplication.shared.connectedScenes
-            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene
+        let windowScenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+        let scene = windowScenes.first(where: { $0.activationState == .foregroundActive })
+                 ?? windowScenes.first
         let window = scene?.windows.first(where: { $0.isKeyWindow })
                   ?? scene?.windows.first
         window?.addSubview(volumeView)
@@ -212,8 +217,11 @@ final class TTMVolumeButtonHandler {
 
     @objc private func appDidBecomeActive() {
         appIsActive = true
+        guard isStarted else { return }
+        // Attach the volume view if no window was available when start() ran.
+        if disableHUD && volumeView.superview == nil { addVolumeViewToKeyWindow() }
         // Re-check edge clamping — volume may have changed while in background.
-        if isStarted { clampEdgeVolumeIfNeeded() }
+        clampEdgeVolumeIfNeeded()
     }
 
     @objc private func appWillResignActive() {
