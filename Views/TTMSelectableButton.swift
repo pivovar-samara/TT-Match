@@ -165,6 +165,7 @@ class TTMSelectableButton: UIButton {
         
         self.defaultColor = player.color()
         self.borderColor = player.color()
+        self.accessibilityValue = String(match.currentPlayerScore(player))
         
         let animationBlock = {[weak self] in
             guard let strongSelf = self else { return }

@@ -28,6 +28,7 @@
 		A02630C01CDA363D00F60C18 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630BF1CDA363D00F60C18 /* UIFontExtensions.swift */; };
 		A02630D21CDB79F500F60C18 /* TTMSoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630D11CDB79F500F60C18 /* TTMSoundManager.swift */; };
 		A02630D41CDB8E6600F60C18 /* TTMConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630D31CDB8E6600F60C18 /* TTMConfig.swift */; };
+		C1A0F00D0000000000000001 /* TTMUITestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F00D0000000000000002 /* TTMUITestSupport.swift */; };
 		A0B663A11D4BCE570042E3F0 /* TTMSelectableButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0B663A01D4BCE570042E3F0 /* TTMSelectableButton.xib */; };
 		A0B663A61D4BDE790042E3F0 /* TTMGameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B663A41D4BDE790042E3F0 /* TTMGameCell.swift */; };
 		A0B663A71D4BDE790042E3F0 /* TTMGameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0B663A51D4BDE790042E3F0 /* TTMGameCell.xib */; };
@@ -58,6 +59,7 @@
 		A02630BF1CDA363D00F60C18 /* UIFontExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExtensions.swift; sourceTree = "<group>"; };
 		A02630D11CDB79F500F60C18 /* TTMSoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMSoundManager.swift; sourceTree = "<group>"; };
 		A02630D31CDB8E6600F60C18 /* TTMConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMConfig.swift; sourceTree = "<group>"; };
+		C1A0F00D0000000000000002 /* TTMUITestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTMUITestSupport.swift; sourceTree = "<group>"; };
 		A0B663A01D4BCE570042E3F0 /* TTMSelectableButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TTMSelectableButton.xib; sourceTree = "<group>"; };
 		A0B663A41D4BDE790042E3F0 /* TTMGameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMGameCell.swift; sourceTree = "<group>"; };
 		A0B663A51D4BDE790042E3F0 /* TTMGameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TTMGameCell.xib; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 			children = (
 				A02630BC1CDA35B900F60C18 /* TTMHelper.swift */,
 				A02630D31CDB8E6600F60C18 /* TTMConfig.swift */,
+				C1A0F00D0000000000000002 /* TTMUITestSupport.swift */,
 				A02630D11CDB79F500F60C18 /* TTMSoundManager.swift */,
 				485D8D6E2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift */,
 				4831DE6F2F8505C800010D5F /* TTMAnalytics.swift */,
@@ -287,6 +290,7 @@
 				A0B663A61D4BDE790042E3F0 /* TTMGameCell.swift in Sources */,
 				A02630A51CDA0D0B00F60C18 /* ViewController.swift in Sources */,
 				A02630D41CDB8E6600F60C18 /* TTMConfig.swift in Sources */,
+				C1A0F00D0000000000000001 /* TTMUITestSupport.swift in Sources */,
 				A02630A31CDA0D0B00F60C18 /* AppDelegate.swift in Sources */,
 				485D8DF02F9A0001009BCBE7 /* SceneDelegate.swift in Sources */,
 				A02630BD1CDA35B900F60C18 /* TTMHelper.swift in Sources */,

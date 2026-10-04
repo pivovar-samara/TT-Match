@@ -13,7 +13,10 @@ import FirebaseAnalytics
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        configureFirebase()
+        TTMUITestSupport.prepareIfNeeded()
+        if !TTMUITestSupport.isUITesting {
+            configureFirebase()
+        }
         return true
     }
 

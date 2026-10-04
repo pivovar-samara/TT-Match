@@ -75,6 +75,13 @@ class ViewController: UIViewController {
         
         self.randomServeButtonBackground.layer.cornerRadius = 70.0
         
+        self.leftButton.accessibilityIdentifier = "score.left"
+        self.rightButton.accessibilityIdentifier = "score.right"
+        self.leftButton.undoButton.accessibilityIdentifier = "undo.left"
+        self.rightButton.undoButton.accessibilityIdentifier = "undo.right"
+        self.settingsButton.accessibilityIdentifier = "settings"
+        self.randomServeButton.accessibilityIdentifier = "randomServe"
+        
         if IS_SMALL_SCREEN {
             self.verticalMarginConstraint.constant = 0.0
             self.tableViewTopMarginConstraint.constant = 0.0
