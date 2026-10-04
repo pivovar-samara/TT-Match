@@ -2,7 +2,7 @@
 
 An iOS app for tracking table tennis match scores. Built for quick, hands-free scorekeeping during real matches.
 
-**Version**: 1.1.2 | **Platform**: iOS 16.0+ | **Language**: Swift 5
+**Version**: 1.1.2 | **Platform**: iOS 17.0+ | **Language**: Swift 5
 
 ---
 
@@ -81,8 +81,8 @@ TT Match/
 
 ## Requirements
 
-- Xcode 26
-- iOS 16.0+ deployment target
+- Xcode 27
+- iOS 17.0+ deployment target (Xcode's recommended target)
 - Swift Package Manager: Firebase (`FirebaseAnalytics`, `FirebaseCrashlytics`) — resolved automatically by Xcode; no CocoaPods
 
 ---
