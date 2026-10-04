@@ -38,6 +38,12 @@ enum TTMMatchPlayer: Int {
 
 class TTMMatch: AnyObject {
     
+    private let userDefaults: UserDefaults
+    
+    init(userDefaults: UserDefaults = .standard) {
+        self.userDefaults = userDefaults
+    }
+    
     static var currentMatch: TTMMatch = {
         let result = TTMMatch()
         result.restore()
@@ -162,8 +168,7 @@ class TTMMatch: AnyObject {
     }
     
     func restore() {
-        let userDefaults = UserDefaults.standard
-        if let dict = userDefaults.object(forKey: "TTMMatch") as? [String: Any] {
+        if let dict = self.userDefaults.object(forKey: "TTMMatch") as? [String: Any] {
             self.settings = TTMMatchSettings(json: dict["settings"] as? [String: Any])
             
             var gameScores: [[TTMMatchPlayer: Int]] = []
@@ -203,7 +208,6 @@ class TTMMatch: AnyObject {
     }
     
     fileprivate func save() {
-        let userDefaults = UserDefaults.standard
         var dict: [String: Any] = [:]
 
         var gameScores: [[Int]] = []
@@ -227,12 +231,11 @@ class TTMMatch: AnyObject {
         }
         dict["history"] = history
 
-        userDefaults.set(dict, forKey: "TTMMatch")
+        self.userDefaults.set(dict, forKey: "TTMMatch")
     }
     
     fileprivate func clear() {
-        let userDefaults = UserDefaults.standard
-        userDefaults.removeObject(forKey: "TTMMatch")
+        self.userDefaults.removeObject(forKey: "TTMMatch")
     }
     
     func reset() {
