@@ -19,6 +19,7 @@
 		485D8D6D2F82642F009BCBE7 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 485D8D6C2F82642F009BCBE7 /* Localizable.xcstrings */; };
 		485D8D6F2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8D6E2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift */; };
 		A02630A31CDA0D0B00F60C18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */; };
+		485D8DF02F9A0001009BCBE7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8DF12F9A0001009BCBE7 /* SceneDelegate.swift */; };
 		A02630A51CDA0D0B00F60C18 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630A41CDA0D0B00F60C18 /* ViewController.swift */; };
 		A02630B51CDA108C00F60C18 /* TTMSelectableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630B41CDA108C00F60C18 /* TTMSelectableButton.swift */; };
 		A02630B71CDA118900F60C18 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630B61CDA118900F60C18 /* UIImageExtensions.swift */; };
@@ -48,6 +49,7 @@
 		485D8D6E2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTMVolumeButtonHandler.swift; sourceTree = "<group>"; };
 		A026309F1CDA0D0A00F60C18 /* TT Match.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TT Match.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		485D8DF12F9A0001009BCBE7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A02630A41CDA0D0B00F60C18 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A02630B41CDA108C00F60C18 /* TTMSelectableButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMSelectableButton.swift; sourceTree = "<group>"; };
 		A02630B61CDA118900F60C18 /* UIImageExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				485D8D4F2F8251CA009BCBE7 /* CLAUDE.md */,
 				485D8D502F8251CA009BCBE7 /* README.md */,
 				A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */,
+				485D8DF12F9A0001009BCBE7 /* SceneDelegate.swift */,
 				485D8D552F826303009BCBE7 /* Entities */,
 				485D8D582F826345009BCBE7 /* Controllers */,
 				485D8D572F82633C009BCBE7 /* Views */,
@@ -285,6 +288,7 @@
 				A02630A51CDA0D0B00F60C18 /* ViewController.swift in Sources */,
 				A02630D41CDB8E6600F60C18 /* TTMConfig.swift in Sources */,
 				A02630A31CDA0D0B00F60C18 /* AppDelegate.swift in Sources */,
+				485D8DF02F9A0001009BCBE7 /* SceneDelegate.swift in Sources */,
 				A02630BD1CDA35B900F60C18 /* TTMHelper.swift in Sources */,
 				A02630BB1CDA20EE00F60C18 /* UIColorExtensions.swift in Sources */,
 				A02630B51CDA108C00F60C18 /* TTMSelectableButton.swift in Sources */,
