@@ -216,7 +216,7 @@ class TTMSelectableButton: UIButton {
                 
                 strongSelf.backgroundView.bounds = CGRect(x: 0.0, y: 0.0, width: finalWidth, height: finalHeight)
                 
-                }, completion: { (finished) in
+                }, completion: { [weak self] (finished) in
                     animationBlock()
                     UIView.animate(withDuration: animationCycle, delay: 0.0, options: [], animations: { [weak self] in
                         guard let strongSelf = self else { return }
