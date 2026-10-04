@@ -39,7 +39,13 @@ Standard MVC pattern with UIKit. Pure Swift — no Objective-C.
 
 ```
 TT Match/
-├── AppDelegate.swift
+├── AppDelegate.swift               # App entry point; configures Firebase
+├── SceneDelegate.swift
+├── Config/
+│   ├── Base.xcconfig               # Committed build config; optionally includes Secrets.xcconfig
+│   └── Secrets.xcconfig.example    # Template for Firebase keys (Secrets.xcconfig is git-ignored)
+├── ci_scripts/
+│   └── ci_pre_xcodebuild.sh        # Xcode Cloud: generates Secrets.xcconfig from env vars
 ├── Controllers/
 │   └── ViewController.swift        # Main UI; handles all user input
 ├── Entities/
@@ -50,6 +56,7 @@ TT Match/
 │   ├── TTMGameCell                 # Table cell showing completed game scores
 │   └── TTMTextField                # Text field used for keyboard management
 ├── Helpers/
+│   ├── TTMAnalytics.swift          # Firebase Analytics event wrappers
 │   ├── TTMConfig.swift             # Global constants
 │   ├── TTMHelper.swift             # Device detection, localization, async helpers
 │   ├── TTMSoundManager.swift       # AVAudioPlayer-based sound playback (singleton)
@@ -76,13 +83,15 @@ TT Match/
 
 - Xcode 26
 - iOS 16.0+ deployment target
-- No CocoaPods, no Swift Package Manager — fully dependency-free
+- Swift Package Manager: Firebase (`FirebaseAnalytics`, `FirebaseCrashlytics`) — resolved automatically by Xcode; no CocoaPods
 
 ---
 
 ## Building
 
-Open `TT Match.xcodeproj` in Xcode and run on a device or simulator. No setup steps required.
+Open `TT Match.xcodeproj` in Xcode and run on a device or simulator. Xcode resolves the Firebase packages on first open.
+
+Firebase is optional for local builds: without keys the app runs normally and simply skips `FirebaseApp.configure`. To enable Analytics and Crashlytics locally, copy `Config/Secrets.xcconfig.example` to `Config/Secrets.xcconfig` and fill in the values from your `GoogleService-Info.plist`. On Xcode Cloud, `ci_scripts/ci_pre_xcodebuild.sh` generates this file from the `FIREBASE_*` workflow environment variables.
 
 iPhone runs in **landscape only**. iPad supports all orientations.
 

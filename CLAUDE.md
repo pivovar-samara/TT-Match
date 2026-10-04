@@ -8,7 +8,7 @@ Guidance for Claude Code when working in this repository.
 
 - **Type**: iOS app (UIKit, MVC)
 - **Language**: Pure Swift — no Objective-C
-- **No external package manager** — no Podfile, no Package.swift; fully dependency-free
+- **Dependencies**: Firebase via Swift Package Manager (`FirebaseAnalytics`, `FirebaseCrashlytics`), added in the Xcode project — no Podfile, no Package.swift
 - **No test targets** — do not add tests unless the user explicitly asks
 
 ---
@@ -48,6 +48,10 @@ Guidance for Claude Code when working in this repository.
 | Audio | `Helpers/TTMSoundManager.swift` |
 | Colors / fonts / images | `Extensions/` |
 | App-level config | `Helpers/TTMConfig.swift` |
+| Analytics events | `Helpers/TTMAnalytics.swift` |
+| Firebase setup | `AppDelegate.swift` (`configureFirebase()`) |
+| Firebase keys / build config | `Config/Base.xcconfig`, `Config/Secrets.xcconfig.example` |
+| Xcode Cloud pre-build | `ci_scripts/ci_pre_xcodebuild.sh` |
 | Localized strings | `Resources/Localizable.xcstrings` |
 | Volume button handling | `Helpers/TTMVolumeButtonHandler.swift` |
 
@@ -66,7 +70,9 @@ Guidance for Claude Code when working in this repository.
 ## Architectural rules
 
 - **Do not break the singleton pattern** for `TTMMatch` or `TTMSoundManager` — `ViewController` depends on `TTMMatch.currentMatch` being a shared instance
-- **Do not add CocoaPods or SPM** unless the user explicitly requests it — this is intentionally dependency-free
+- **Do not add new dependencies** (SPM packages or CocoaPods) unless the user explicitly requests it — Firebase is the only one
+- **Firebase is configured from build settings, not `GoogleService-Info.plist`**: keys come from `Config/Secrets.xcconfig` (git-ignored; generated on Xcode Cloud by `ci_scripts/ci_pre_xcodebuild.sh`) → Info.plist → `AppDelegate.configureFirebase()`. Missing keys mean Firebase is silently skipped. Never commit `Secrets.xcconfig` or real keys
+- **Analytics calls go through `TTMAnalytics`** — do not call `Analytics.logEvent` directly from controllers. Do not set user IDs or user properties; only aggregate, non-identifying events are collected (IDFV collection is disabled in Info.plist)
 - **Persistence is automatic**: model property changes trigger `didSet` which calls `save()` — do not add manual save calls in the controller
 - **Volume button handling** is encapsulated in `TTMVolumeButtonHandler`. It owns the `AVAudioSession` (`.playback` + `.mixWithOthers`) and the hidden `MPVolumeView` (HUD suppression). `ViewController.viewDidLoad` creates the handler and calls `start(true)`. `TTMVolumeButtonHandler` is *not* a singleton — it is owned by `ViewController`
 
