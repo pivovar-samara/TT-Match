@@ -58,6 +58,7 @@ TT Match/
 ├── Helpers/
 │   ├── TTMAnalytics.swift          # Firebase Analytics event wrappers
 │   ├── TTMConfig.swift             # Global constants
+│   ├── TTMUITestSupport.swift      # -UITesting launch mode: clean state, seeded match, no Firebase
 │   ├── TTMHelper.swift             # Device detection, localization, async helpers
 │   ├── TTMSoundManager.swift       # AVAudioPlayer-based sound playback (singleton)
 │   └── TTMVolumeButtonHandler.swift # Volume button interception; suppresses system HUD
@@ -94,6 +95,19 @@ Open `TT Match.xcodeproj` in Xcode and run on a device or simulator. Xcode resol
 Firebase is optional for local builds: without keys the app runs normally and simply skips `FirebaseApp.configure`. To enable Analytics and Crashlytics locally, copy `Config/Secrets.xcconfig.example` to `Config/Secrets.xcconfig` and fill in the values from your `GoogleService-Info.plist`. On Xcode Cloud, `ci_scripts/ci_pre_xcodebuild.sh` generates this file from the `FIREBASE_*` workflow environment variables.
 
 iPhone runs in **landscape only**. iPad supports all orientations.
+
+---
+
+## Tests
+
+- `TT MatchTests` — Swift Testing unit tests for match logic: serve rotation, deuce, game/match end, side switching, undo, persistence
+- `TT MatchUITests` — XCUITest scenarios: scoring, undo, settings and reset dialogs. Tests can start from a preset score via `MatchSeed` instead of playing up to it
+
+The scheme has two test plans: `CITests` (default, unit tests only — fast) and `FullTests` (unit + UI, ~3 min).
+
+```bash
+xcodebuild test -project "TT Match.xcodeproj" -scheme "TT Match" -destination 'platform=iOS Simulator,name=iPhone 17' -parallel-testing-enabled NO -collect-test-diagnostics never -testPlan FullTests
+```
 
 ---
 

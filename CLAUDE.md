@@ -9,7 +9,8 @@ Guidance for Claude Code when working in this repository.
 - **Type**: iOS app (UIKit, MVC)
 - **Language**: Pure Swift — no Objective-C
 - **Dependencies**: Firebase via Swift Package Manager (`FirebaseAnalytics`, `FirebaseCrashlytics`), added in the Xcode project — no Podfile, no Package.swift
-- **No test targets** — do not add tests unless the user explicitly asks
+- **Tests**: `TT MatchTests` (Swift Testing, unit tests for `TTMMatch`/`TTMMatchSettings`) and `TT MatchUITests` (XCUITest). They are the safety net for the planned UIKit → SwiftUI migration — keep them passing and keep the accessibility identifiers they rely on
+- **Deployment target**: `$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)` (iOS 17.0 with Xcode 27)
 
 ---
 
@@ -54,6 +55,9 @@ Guidance for Claude Code when working in this repository.
 | Xcode Cloud pre-build | `ci_scripts/ci_pre_xcodebuild.sh` |
 | Localized strings | `Resources/Localizable.xcstrings` |
 | Volume button handling | `Helpers/TTMVolumeButtonHandler.swift` |
+| UI test launch mode / seeded match | `Helpers/TTMUITestSupport.swift` |
+| Unit tests (fixture: `MatchFixture.swift`) | `TT MatchTests/` |
+| UI tests (base: `TTMUITestCase.swift`) | `TT MatchUITests/` |
 
 ---
 
@@ -89,6 +93,16 @@ Guidance for Claude Code when working in this repository.
 1. Open `Resources/Localizable.xcstrings` in Xcode's String Catalog editor (or edit the JSON directly)
 2. Add the key with both `en` and `ru` translations
 3. Reference it with `L("your_key")`
+
+### Testing
+- Unit tests create matches via `MatchFixture` (isolated `UserDefaults` suite through `TTMMatch(userDefaults:)`) — never touch `TTMMatch.currentMatch` or `UserDefaults.standard` from tests
+- Unit test suites are `@MainActor` because `TTMMatch` plays sounds through the `TTMSoundManager` singleton
+- UI tests launch with `-UITesting` (clean state, no Firebase, animations off). To start from a given score pass a `MatchSeed`, which goes to `TTM_UITEST_MATCH` in the same JSON format `TTMMatch.save()` writes. `restore()` resets a finished match, so seed one point before the event and tap once
+- Accessibility identifiers used by UI tests: `score.left`/`score.right` (value = current score), `settings`, `randomServe`, `game.N` (value = `"left-right"` once the game is finished). `undo.left`/`undo.right` are set but invisible to XCUITest (the undo button is a subview of the score `UIButton`), so `tapUndo(left:)` taps by position — switch it to the identifier once the score button is SwiftUI
+- On iPhone the action sheets appear as popovers without a Cancel button — dismiss with `dismissActionSheet()`
+- `-collect-test-diagnostics never` is needed: otherwise `xcodebuild` hangs in `simctl diagnose` after UI tests
+- The app ignores taps for `secondsToDeclineTaps` after each point/undo — use `tapAndSettle`
+- Test plans: `CITests` (scheme default, unit only) and `FullTests` (unit + UI). Full run: `xcodebuild test -project "TT Match.xcodeproj" -scheme "TT Match" -destination 'platform=iOS Simulator,name=iPhone 17' -parallel-testing-enabled NO -collect-test-diagnostics never -testPlan FullTests`
 
 ### Changing game settings defaults
 Edit `TTMMatchSettings.swift` — the defaults are defined there as property initializers.
