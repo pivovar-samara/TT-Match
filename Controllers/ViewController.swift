@@ -92,16 +92,6 @@ class ViewController: UIViewController {
         self.updateFromCurrentGame(false, playerAction: nil)
     }
 
-    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        if (motion == .motionShake) {
-            if TTMMatch.currentMatch.serve == nil {
-                self.showGameSettingsDialog()
-            } else {
-                self.showRestartMatchDialog()
-            }
-        }
-    }
-    
     fileprivate func showRestartMatchDialog(_ sender: UIView? = nil) {
         let dialog = UIAlertController(title: L("Shake_ActionSheet_Title"), message: nil, preferredStyle: .actionSheet)
         let resetGameAction = UIAlertAction(title: L("Shake_ActionSheet_Confirm"), style: .destructive, handler: {[weak self] (action) in

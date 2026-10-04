@@ -12,7 +12,7 @@ An iOS app for tracking table tennis match scores. Built for quick, hands-free s
 - **Score tracking**: Points per game (default 11), games won per player
 - **Serve rotation**: Automatically tracks who serves, including deuce rules (1 serve each at 10-10+)
 - **Undo**: Long-press to undo the last point; full history maintained throughout the match
-- **Reset**: Shake the device to start a new match
+- **Reset**: Tap the settings button during a match to start a new one
 - **Persistence**: Match state is saved automatically and restored on next launch
 - **Audio feedback**: Different sounds for scoring, serve changes, new games, and match win; volume tracks the media volume the user has set
 - **Hands-free input**: Physical volume buttons score points — system HUD is suppressed and the actual volume level is never changed
@@ -27,7 +27,7 @@ An iOS app for tracking table tennis match scores. Built for quick, hands-free s
 | Add point (left/right player) | Tap the player's score button |
 | Add point (volume buttons) | Volume Up → right player, Volume Down → left player |
 | Undo last point | Long-press either score button |
-| Reset match | Shake device |
+| Reset match | Tap settings button during a match |
 | Change game count | Tap settings icon |
 | Randomize first server | Tap the serve indicator before match starts |
 
