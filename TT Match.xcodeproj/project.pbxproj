@@ -18,8 +18,8 @@
 		485D8D632F8263C8009BCBE7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 485D8D5D2F8263C8009BCBE7 /* LaunchScreen.storyboard */; };
 		485D8D6D2F82642F009BCBE7 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 485D8D6C2F82642F009BCBE7 /* Localizable.xcstrings */; };
 		485D8D6F2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8D6E2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift */; };
-		A02630A31CDA0D0B00F60C18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */; };
 		485D8DF02F9A0001009BCBE7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8DF12F9A0001009BCBE7 /* SceneDelegate.swift */; };
+		A02630A31CDA0D0B00F60C18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */; };
 		A02630A51CDA0D0B00F60C18 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630A41CDA0D0B00F60C18 /* ViewController.swift */; };
 		A02630B51CDA108C00F60C18 /* TTMSelectableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630B41CDA108C00F60C18 /* TTMSelectableButton.swift */; };
 		A02630B71CDA118900F60C18 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630B61CDA118900F60C18 /* UIImageExtensions.swift */; };
@@ -47,9 +47,9 @@
 		485D8D5E2F8263C8009BCBE7 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		485D8D6C2F82642F009BCBE7 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		485D8D6E2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTMVolumeButtonHandler.swift; sourceTree = "<group>"; };
+		485D8DF12F9A0001009BCBE7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A026309F1CDA0D0A00F60C18 /* TT Match.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TT Match.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		485D8DF12F9A0001009BCBE7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A02630A41CDA0D0B00F60C18 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A02630B41CDA108C00F60C18 /* TTMSelectableButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMSelectableButton.swift; sourceTree = "<group>"; };
 		A02630B61CDA118900F60C18 /* UIImageExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
@@ -202,7 +202,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 2630;
+				LastUpgradeCheck = 2710;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					A026309E1CDA0D0A00F60C18 = {
@@ -433,7 +433,7 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "TT Match";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -460,7 +460,7 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "TT Match";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
