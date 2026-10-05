@@ -23,6 +23,13 @@ set -e
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SECRETS_FILE="$REPO_ROOT/Config/Secrets.xcconfig"
 
+# Tests run with test-without-building on a separate machine where only
+# ci_scripts/ is available — nothing is built there, so no secrets are needed.
+if [ "$CI_XCODEBUILD_ACTION" = "test-without-building" ] || [ ! -d "$REPO_ROOT/Config" ]; then
+    echo "ci_pre_xcodebuild: no build in this step ($CI_XCODEBUILD_ACTION), skipping."
+    exit 0
+fi
+
 echo "ci_pre_xcodebuild: writing $SECRETS_FILE"
 
 cat > "$SECRETS_FILE" <<EOF

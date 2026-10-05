@@ -33,6 +33,8 @@ class TTMGameCell: UITableViewCell {
     }
     
     func update(_ match: TTMMatch, gameIndex: Int, players: [TTMMatchPlayer]) {
+        self.accessibilityIdentifier = "game.\(gameIndex)"
+        self.accessibilityValue = nil
         if (gameIndex < match.gameScores.count - 1) || (gameIndex == match.gameScores.count - 1 && match.gameFinished) {
             let game = match.gameScores[gameIndex]
             let player1Score = game[players[0]]!
@@ -40,6 +42,7 @@ class TTMGameCell: UITableViewCell {
             
             self.leftLabel.text = String(player1Score)
             self.rightLabel.text = String(player2Score)
+            self.accessibilityValue = "\(player1Score)-\(player2Score)"
             self.leftLabel.isHidden = false
             self.rightLabel.isHidden = false
             

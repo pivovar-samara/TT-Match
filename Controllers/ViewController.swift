@@ -75,6 +75,13 @@ class ViewController: UIViewController {
         
         self.randomServeButtonBackground.layer.cornerRadius = 70.0
         
+        self.leftButton.accessibilityIdentifier = "score.left"
+        self.rightButton.accessibilityIdentifier = "score.right"
+        self.leftButton.undoButton.accessibilityIdentifier = "undo.left"
+        self.rightButton.undoButton.accessibilityIdentifier = "undo.right"
+        self.settingsButton.accessibilityIdentifier = "settings"
+        self.randomServeButton.accessibilityIdentifier = "randomServe"
+        
         if IS_SMALL_SCREEN {
             self.verticalMarginConstraint.constant = 0.0
             self.tableViewTopMarginConstraint.constant = 0.0
@@ -92,16 +99,6 @@ class ViewController: UIViewController {
         self.updateFromCurrentGame(false, playerAction: nil)
     }
 
-    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        if (motion == .motionShake) {
-            if TTMMatch.currentMatch.serve == nil {
-                self.showGameSettingsDialog()
-            } else {
-                self.showRestartMatchDialog()
-            }
-        }
-    }
-    
     fileprivate func showRestartMatchDialog(_ sender: UIView? = nil) {
         let dialog = UIAlertController(title: L("Shake_ActionSheet_Title"), message: nil, preferredStyle: .actionSheet)
         let resetGameAction = UIAlertAction(title: L("Shake_ActionSheet_Confirm"), style: .destructive, handler: {[weak self] (action) in

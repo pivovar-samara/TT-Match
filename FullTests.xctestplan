@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "F1ABFBAE-BAF3-4BE8-9CCF-A8D029C7C826",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:TT Match.xcodeproj",
+        "identifier" : "485F29483072C19300546523",
+        "name" : "TT MatchTests"
+      }
+    },
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:TT Match.xcodeproj",
+        "identifier" : "485F29553072C1A900546523",
+        "name" : "TT MatchUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

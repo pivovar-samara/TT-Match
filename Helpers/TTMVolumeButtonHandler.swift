@@ -28,6 +28,9 @@ final class TTMVolumeButtonHandler {
     // MARK: - Private
 
     private let session = AVAudioSession.sharedInstance()
+    // setActive blocks while the audio system reconfigures, so it runs off the
+    // main thread. Serial, so activation and deactivation keep their order.
+    private let sessionQueue = DispatchQueue(label: "TTMVolumeButtonHandler.session")
     private var observation: NSKeyValueObservation?
 
     // Placed far off-screen so it is never visible, but its *presence* in the
@@ -88,7 +91,9 @@ final class TTMVolumeButtonHandler {
         observation = nil
         volumeView.isHidden = true
         NotificationCenter.default.removeObserver(self)
-        try? session.setActive(false, options: .notifyOthersOnDeactivation)
+        sessionQueue.async { [session] in
+            try? session.setActive(false, options: .notifyOthersOnDeactivation)
+        }
     }
 
     // MARK: - Session setup
@@ -96,11 +101,11 @@ final class TTMVolumeButtonHandler {
     private func setupSession() {
         do {
             try session.setCategory(.playback, options: .mixWithOthers)
-            clampEdgeVolumeIfNeeded()
-            try session.setActive(true)
         } catch {
             return
         }
+        clampEdgeVolumeIfNeeded()
+        activateSession()
 
         // Replace any existing observation (safe: the old NSKeyValueObservation
         // is released and automatically unregisters itself).
@@ -130,6 +135,12 @@ final class TTMVolumeButtonHandler {
             selector: #selector(appWillResignActive),
             name: UIApplication.willResignActiveNotification,
             object: nil)
+    }
+
+    private func activateSession() {
+        sessionQueue.async { [session] in
+            try? session.setActive(true)
+        }
     }
 
     // MARK: - Volume helpers
@@ -212,7 +223,7 @@ final class TTMVolumeButtonHandler {
             let type = AVAudioSession.InterruptionType(rawValue: typeValue),
             type == .ended
         else { return }
-        try? session.setActive(true)
+        activateSession()
     }
 
     @objc private func appDidBecomeActive() {

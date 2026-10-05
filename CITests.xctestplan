@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "34EE7B3B-DCD8-4F92-BCE3-39A31BF328CB",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:TT Match.xcodeproj",
+        "identifier" : "485F29483072C19300546523",
+        "name" : "TT MatchTests"
+      }
+    }
+  ],
+  "version" : 1
+}

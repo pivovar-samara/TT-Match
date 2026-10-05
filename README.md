@@ -2,7 +2,7 @@
 
 An iOS app for tracking table tennis match scores. Built for quick, hands-free scorekeeping during real matches.
 
-**Version**: 1.1.2 | **Platform**: iOS 16.0+ | **Language**: Swift 5
+**Version**: 1.1.2 | **Platform**: iOS 17.0+ | **Language**: Swift 5
 
 ---
 
@@ -12,7 +12,7 @@ An iOS app for tracking table tennis match scores. Built for quick, hands-free s
 - **Score tracking**: Points per game (default 11), games won per player
 - **Serve rotation**: Automatically tracks who serves, including deuce rules (1 serve each at 10-10+)
 - **Undo**: Long-press to undo the last point; full history maintained throughout the match
-- **Reset**: Shake the device to start a new match
+- **Reset**: Tap the settings button during a match to start a new one
 - **Persistence**: Match state is saved automatically and restored on next launch
 - **Audio feedback**: Different sounds for scoring, serve changes, new games, and match win; volume tracks the media volume the user has set
 - **Hands-free input**: Physical volume buttons score points — system HUD is suppressed and the actual volume level is never changed
@@ -27,7 +27,7 @@ An iOS app for tracking table tennis match scores. Built for quick, hands-free s
 | Add point (left/right player) | Tap the player's score button |
 | Add point (volume buttons) | Volume Up → right player, Volume Down → left player |
 | Undo last point | Long-press either score button |
-| Reset match | Shake device |
+| Reset match | Tap settings button during a match |
 | Change game count | Tap settings icon |
 | Randomize first server | Tap the serve indicator before match starts |
 
@@ -58,6 +58,7 @@ TT Match/
 ├── Helpers/
 │   ├── TTMAnalytics.swift          # Firebase Analytics event wrappers
 │   ├── TTMConfig.swift             # Global constants
+│   ├── TTMUITestSupport.swift      # -UITesting launch mode: clean state, seeded match, no Firebase
 │   ├── TTMHelper.swift             # Device detection, localization, async helpers
 │   ├── TTMSoundManager.swift       # AVAudioPlayer-based sound playback (singleton)
 │   └── TTMVolumeButtonHandler.swift # Volume button interception; suppresses system HUD
@@ -81,8 +82,8 @@ TT Match/
 
 ## Requirements
 
-- Xcode 26
-- iOS 16.0+ deployment target
+- Xcode 27
+- iOS 17.0+ deployment target (Xcode's recommended target)
 - Swift Package Manager: Firebase (`FirebaseAnalytics`, `FirebaseCrashlytics`) — resolved automatically by Xcode; no CocoaPods
 
 ---
@@ -94,6 +95,19 @@ Open `TT Match.xcodeproj` in Xcode and run on a device or simulator. Xcode resol
 Firebase is optional for local builds: without keys the app runs normally and simply skips `FirebaseApp.configure`. To enable Analytics and Crashlytics locally, copy `Config/Secrets.xcconfig.example` to `Config/Secrets.xcconfig` and fill in the values from your `GoogleService-Info.plist`. On Xcode Cloud, `ci_scripts/ci_pre_xcodebuild.sh` generates this file from the `FIREBASE_*` workflow environment variables.
 
 iPhone runs in **landscape only**. iPad supports all orientations.
+
+---
+
+## Tests
+
+- `TT MatchTests` — Swift Testing unit tests for match logic: serve rotation, deuce, game/match end, side switching, undo, persistence
+- `TT MatchUITests` — XCUITest scenarios: scoring, undo, settings and reset dialogs. Tests can start from a preset score via `MatchSeed` instead of playing up to it
+
+The scheme has two test plans: `CITests` (default, unit tests only — fast) and `FullTests` (unit + UI, ~3 min).
+
+```bash
+xcodebuild test -project "TT Match.xcodeproj" -scheme "TT Match" -destination 'platform=iOS Simulator,name=iPhone 17' -collect-test-diagnostics never -testPlan FullTests
+```
 
 ---
 

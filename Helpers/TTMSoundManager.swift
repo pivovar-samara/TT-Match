@@ -29,7 +29,13 @@ class TTMSoundManager: NSObject {
 
     // Retains the player for the duration of playback.
     // Replaced on each new sound — acceptable because all sounds are short (< 1 s).
+    // Only touched on playbackQueue.
     fileprivate var currentPlayer: AVAudioPlayer?
+
+    // play() activates the audio session if it is not active yet, which blocks,
+    // so players are created and started off the main thread. Serial, so sounds
+    // keep their order.
+    fileprivate let playbackQueue = DispatchQueue(label: "TTMSoundManager.playback", qos: .userInteractive)
 
     override init() {
         super.init()
@@ -57,13 +63,15 @@ extension TTMSoundManager {
         // so playback volume tracks the media volume set by the user's volume
         // buttons — unlike AudioServicesPlaySystemSound, which uses ringer volume
         // and ignores the session entirely.
-        do {
-            let player = try AVAudioPlayer(contentsOf: soundURL)
-            currentPlayer = player   // must be retained or playback stops immediately
-            player.play()
-        } catch {
-            // File unreadable (e.g. the system sound was removed in a future OS).
-            // Fail silently — missing audio is never fatal for a score tracker.
+        playbackQueue.async {
+            do {
+                let player = try AVAudioPlayer(contentsOf: soundURL)
+                self.currentPlayer = player   // must be retained or playback stops immediately
+                player.play()
+            } catch {
+                // File unreadable (e.g. the system sound was removed in a future OS).
+                // Fail silently — missing audio is never fatal for a score tracker.
+            }
         }
         if vibration {
             // AVAudioPlayer has no vibration API; keep AudioServices for this path.
