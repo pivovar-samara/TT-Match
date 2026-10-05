@@ -7,9 +7,6 @@
 
 import UIKit
 
-let IS_IPAD:Bool = UIDevice.current.userInterfaceIdiom == .pad
-let IS_SMALL_SCREEN = min(UIScreen.main.bounds.size.height, UIScreen.main.bounds.size.width) < 370.0
-
 public func L (_ key: String) -> String
 {
     let str = NSLocalizedString(key, comment: "")

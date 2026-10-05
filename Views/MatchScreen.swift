@@ -22,8 +22,9 @@ struct MatchScreen: View {
         // measured from the top safe area. Padding inside the safe area would add the home indicator
         // inset at the bottom and push everything up.
         GeometryReader { proxy in
-            let margin: CGFloat = IS_SMALL_SCREEN ? 0.0 : 16.0
-            content
+            let isCompact = Self.isCompact(proxy)
+            let margin: CGFloat = isCompact ? 0.0 : 16.0
+            content(isCompact: isCompact)
                 .padding(.horizontal, 16.0)
                 .padding(.top, margin)
                 .padding(.bottom, margin + proxy.safeAreaInsets.top)
@@ -39,11 +40,20 @@ struct MatchScreen: View {
         .onAppear(perform: startVolumeButtons)
     }
 
-    private var content: some View {
+    /// Small windows (the smallest iPhones) get no vertical margins. Measured with the safe area insets,
+    /// i.e. the whole window.
+    private static func isCompact(_ proxy: GeometryProxy) -> Bool {
+        let insets = proxy.safeAreaInsets
+        let width = proxy.size.width + insets.leading + insets.trailing
+        let height = proxy.size.height + insets.top + insets.bottom
+        return min(width, height) < 370.0
+    }
+
+    private func content(isCompact: Bool) -> some View {
         ZStack {
             HStack(spacing: 16.0) {
                 scoreButton(player: viewModel.leftPlayer, side: .left)
-                centerColumn
+                centerColumn(isCompact: isCompact)
                 scoreButton(player: viewModel.rightPlayer, side: .right)
             }
             .background(RoundedRectangle(cornerRadius: 36.0).fill(viewModel.gameWinner?.swiftUIColor ?? .clear))
@@ -69,15 +79,15 @@ struct MatchScreen: View {
             onUndo: viewModel.undo)
     }
 
-    private var centerColumn: some View {
+    private func centerColumn(isCompact: Bool) -> some View {
         VStack(spacing: 10.0) {
             GamesStrip(match: viewModel.match)
                 .opacity(viewModel.showsGames ? 1.0 : 0.0)
-                .padding(.top, IS_SMALL_SCREEN ? 0.0 : 8.0)
+                .padding(.top, isCompact ? 0.0 : 8.0)
                 .frame(maxHeight: .infinity, alignment: .top)
                 .clipped()
             settingsButton
-                .padding(.bottom, IS_SMALL_SCREEN ? 0.0 : 16.0)
+                .padding(.bottom, isCompact ? 0.0 : 16.0)
         }
         .frame(width: 48.0)
     }

@@ -43,7 +43,7 @@ struct ScoreButton: View {
         return GeometryReader { proxy in
             ZStack(alignment: .bottom) {
                 Text(String(score))
-                    .font(.ttmBold(Self.scoreFontSize(forWidth: proxy.size.width - 32.0)))
+                    .font(.ttmBold(Self.scoreFontSize(for: proxy.size)))
                     .monospacedDigit()
                     .lineLimit(1)
                     .contentTransition(.numericText(value: Double(score)))
@@ -119,11 +119,17 @@ struct ScoreButton: View {
         return isFilled ? .white : player.swiftUIColor
     }
 
-    /// The largest font that fits "00" into `width`.
-    static func scoreFontSize(forWidth width: CGFloat) -> CGFloat {
+    /// Room for the games score at the bottom of the button (label height and padding).
+    private static let gamesScoreHeight: CGFloat = 48.0 + 14.0
+
+    /// The largest font for a score button of `size`: "00" fits the width (with 16 pt margins), and the
+    /// centered line leaves room for the games score below it.
+    static func scoreFontSize(for size: CGSize) -> CGFloat {
         let referenceSize: CGFloat = 100.0
-        let referenceWidth = ("00" as NSString).size(withAttributes: [.font: UIFont.ttmFontBoldOfSize(referenceSize)]).width
-        let maxSize: CGFloat = IS_IPAD ? 384.0 : 192.0
-        return max(1.0, min(maxSize, floor(referenceSize * width / referenceWidth)))
+        let referenceFont = UIFont.ttmFontBoldOfSize(referenceSize)
+        let referenceWidth = ("00" as NSString).size(withAttributes: [.font: referenceFont]).width
+        let widthLimit = referenceSize * (size.width - 32.0) / referenceWidth
+        let heightLimit = referenceSize * (size.height - 2.0 * gamesScoreHeight) / referenceFont.lineHeight
+        return max(1.0, floor(min(widthLimit, heightLimit)))
     }
 }

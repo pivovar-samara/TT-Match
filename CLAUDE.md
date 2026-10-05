@@ -67,7 +67,7 @@ Guidance for Claude Code when working in this repository.
 ## Coding conventions
 
 - Use `L("key")` (defined in `TTMHelper.swift`) instead of `NSLocalizedString` directly
-- Device detection: use the global constants `IS_IPAD` and `IS_SMALL_SCREEN` (defined in `TTMHelper.swift`) — do not query `UIDevice` or `UIScreen` directly
+- Layout decisions come from the window/container size (`GeometryReader`) or size classes, never from the device (`UIDevice` idiom, `UIScreen`, orientation): the window changes size without a relaunch (iPad multitasking, iPhone Duo opening/closing). The score font is sized to its button (`ScoreButton.scoreFontSize(for:)`)
 - Delay helper: `delay(_:closure:)` (defined in `TTMHelper.swift`) wraps `DispatchQueue.main.asyncAfter` — call as `delay(0.3) { ... }`
 - Colors: use `Color.ttmBlue`, `Color.ttmGreen`, `Color.ttmGray` and `TTMMatchPlayer.swiftUIColor` (defined on top of `UIColor.ttm*Color`); `Color.ttmBackground` (system background) for the screen — the app supports dark mode, so never hard-code white/black backgrounds. Content on player-colored fills stays white
 - Circular controls (settings, undo) use `.ttmCircleBackground(_:)` (`Extensions/ViewExtensions.swift`): Liquid Glass on iOS 26+, a plain fill before. Not for views that animate scale or rotation (the serve randomizer): interactive glass resizes itself on touch and the animation glitches
@@ -130,7 +130,7 @@ All serve logic lives in the `serve` computed property and related helpers in `T
 ## Things to avoid
 
 - Do not use `UserDefaults` keys other than `"TTMMatch"` for match state — the serialization/deserialization in `TTMMatch` uses that key exclusively
-- Do not access `UIScreen.main.bounds` directly for layout decisions — use the `IS_SMALL_SCREEN` and `IS_IPAD` constants
+- Do not use `UIScreen.main` or `userInterfaceIdiom` for layout decisions — measure the window with `GeometryReader`
 - Do not add `print` or `NSLog` statements for debugging without removing them before finishing — the build phase already warns on TODO/FIXME
 - Do not create new singleton classes without strong justification; the two existing ones (`TTMMatch`, `TTMSoundManager`) cover all shared state needs
 - Do not call `userDefaults.synchronize()` — it is a no-op since iOS 12 and will generate a deprecation warning
