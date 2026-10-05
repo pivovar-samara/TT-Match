@@ -43,6 +43,7 @@ Guidance for Claude Code when working in this repository.
 |-------------------------|------|
 | Game logic / serve rules | `Entities/TTMMatch.swift` |
 | Match configuration | `Entities/TTMMatchSettings.swift` |
+| Screen logic (intents, tap lockout, analytics, UI state) | `Controllers/MatchViewModel.swift` |
 | UI layout | `Resources/Main.storyboard` + `Controllers/ViewController.swift` |
 | Score button appearance | `Views/TTMSelectableButton.swift` |
 | Completed game row | `Views/TTMGameCell.swift` |
@@ -56,7 +57,7 @@ Guidance for Claude Code when working in this repository.
 | Localized strings | `Resources/Localizable.xcstrings` |
 | Volume button handling | `Helpers/TTMVolumeButtonHandler.swift` |
 | UI test launch mode / seeded match | `Helpers/TTMUITestSupport.swift` |
-| Unit tests (fixture: `MatchFixture.swift`) | `TT MatchTests/` |
+| Unit tests (fixture: `MatchFixture.swift`) | `TT MatchTests/` (app target files are not folder-synchronized — add new app sources to `project.pbxproj`; test targets are synchronized) |
 | UI tests (base: `TTMUITestCase.swift`) | `TT MatchUITests/` |
 
 ---
@@ -76,7 +77,8 @@ Guidance for Claude Code when working in this repository.
 - **Do not break the singleton pattern** for `TTMMatch` or `TTMSoundManager` — `ViewController` depends on `TTMMatch.currentMatch` being a shared instance
 - **Do not add new dependencies** (SPM packages or CocoaPods) unless the user explicitly requests it — Firebase is the only one
 - **Firebase is configured from build settings, not `GoogleService-Info.plist`**: keys come from `Config/Secrets.xcconfig` (git-ignored; generated on Xcode Cloud by `ci_scripts/ci_pre_xcodebuild.sh`) → Info.plist → `AppDelegate.configureFirebase()`. Missing keys mean Firebase is silently skipped. Never commit `Secrets.xcconfig` or real keys
-- **Analytics calls go through `TTMAnalytics`** — do not call `Analytics.logEvent` directly from controllers. Do not set user IDs or user properties; only aggregate, non-identifying events are collected (IDFV collection is disabled in Info.plist)
+- **Screen logic lives in `MatchViewModel`** (`@Observable`, `@MainActor`): user intents, the tap lockout, analytics and the derived UI state. `ViewController` only forwards input to it and renders its state in `updateUI()` — keep it that way, it is the first step of the SwiftUI migration. `TTMMatch` is `@Observable` too
+- **Analytics calls go through `TTMAnalytics`** — do not call `Analytics.logEvent` directly from controllers. `MatchViewModel` reports through the `TTMAnalyticsTracking` protocol (`TTMAnalyticsTracker` forwards to `TTMAnalytics`; tests pass a spy). Do not set user IDs or user properties; only aggregate, non-identifying events are collected (IDFV collection is disabled in Info.plist)
 - **Persistence is automatic**: model property changes trigger `didSet` which calls `save()` — do not add manual save calls in the controller
 - **Volume button handling** is encapsulated in `TTMVolumeButtonHandler`. It owns the `AVAudioSession` (`.playback` + `.mixWithOthers`) and the hidden `MPVolumeView` (HUD suppression). `ViewController.viewDidLoad` creates the handler and calls `start(true)`. `TTMVolumeButtonHandler` is *not* a singleton — it is owned by `ViewController`
 
@@ -96,6 +98,7 @@ Guidance for Claude Code when working in this repository.
 
 ### Testing
 - Unit tests create matches via `MatchFixture` (isolated `UserDefaults` suite through `TTMMatch(userDefaults:)`) — never touch `TTMMatch.currentMatch` or `UserDefaults.standard` from tests
+- `MatchViewModelTests` builds `MatchViewModel(match: fixture.match, analytics: AnalyticsSpy())`
 - Unit test suites are `@MainActor` because `TTMMatch` plays sounds through the `TTMSoundManager` singleton
 - UI tests launch with `-UITesting` (clean state, no Firebase, animations off). To start from a given score pass a `MatchSeed`, which goes to `TTM_UITEST_MATCH` in the same JSON format `TTMMatch.save()` writes. `restore()` resets a finished match, so seed one point before the event and tap once
 - Accessibility identifiers used by UI tests: `score.left`/`score.right` (value = current score), `settings`, `randomServe`, `game.N` (value = `"left-right"` once the game is finished). `undo.left`/`undo.right` are set but invisible to XCUITest (the undo button is a subview of the score `UIButton`), so `tapUndo(left:)` taps by position — switch it to the identifier once the score button is SwiftUI
@@ -111,9 +114,9 @@ Edit `TTMMatchSettings.swift` — the defaults are defined there as property ini
 All serve logic lives in the `serve` computed property and related helpers in `TTMMatch.swift`. Read it carefully before editing — the deuce case (points ≥ `pointCount - 1` for both players) switches from 2-serve to 1-serve rotation.
 
 ### Adding a new player interaction
-1. Add gesture recognizer or button action in `ViewController`
-2. Call the appropriate method on `TTMMatch.currentMatch`
-3. Update `ViewController.updateUI()` to reflect any new state
+1. Add an intent to `MatchViewModel` (it calls `TTMMatch` and reports analytics) and cover it in `MatchViewModelTests`
+2. Add the gesture recognizer or button action in `ViewController` that calls the intent
+3. Expose any new UI state as a `MatchViewModel` property and render it in `ViewController.updateUI()`
 
 ---
 

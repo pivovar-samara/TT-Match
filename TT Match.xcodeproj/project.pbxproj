@@ -19,6 +19,7 @@
 		485D8D6D2F82642F009BCBE7 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 485D8D6C2F82642F009BCBE7 /* Localizable.xcstrings */; };
 		485D8D6F2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8D6E2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift */; };
 		485D8DF02F9A0001009BCBE7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8DF12F9A0001009BCBE7 /* SceneDelegate.swift */; };
+		48A1C0022F90000100A1B2C3 /* MatchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A1C0012F90000100A1B2C3 /* MatchViewModel.swift */; };
 		A02630A31CDA0D0B00F60C18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */; };
 		A02630A51CDA0D0B00F60C18 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630A41CDA0D0B00F60C18 /* ViewController.swift */; };
 		A02630B51CDA108C00F60C18 /* TTMSelectableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630B41CDA108C00F60C18 /* TTMSelectableButton.swift */; };
@@ -70,6 +71,7 @@
 		485F29563072C1A900546523 /* TT MatchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TT MatchUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		485F29873072CA5800546523 /* CITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CITests.xctestplan; sourceTree = "<group>"; };
 		485F29883072CA8700546523 /* FullTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = FullTests.xctestplan; sourceTree = "<group>"; };
+		48A1C0012F90000100A1B2C3 /* MatchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchViewModel.swift; sourceTree = "<group>"; };
 		A026309F1CDA0D0A00F60C18 /* TT Match.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TT Match.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A02630A41CDA0D0B00F60C18 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				A02630A41CDA0D0B00F60C18 /* ViewController.swift */,
+				48A1C0012F90000100A1B2C3 /* MatchViewModel.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -419,6 +422,7 @@
 				485D8D542F8262F1009BCBE7 /* TTMMatch.swift in Sources */,
 				A0B663A61D4BDE790042E3F0 /* TTMGameCell.swift in Sources */,
 				A02630A51CDA0D0B00F60C18 /* ViewController.swift in Sources */,
+				48A1C0022F90000100A1B2C3 /* MatchViewModel.swift in Sources */,
 				A02630D41CDB8E6600F60C18 /* TTMConfig.swift in Sources */,
 				C1A0F00D0000000000000001 /* TTMUITestSupport.swift in Sources */,
 				A02630A31CDA0D0B00F60C18 /* AppDelegate.swift in Sources */,

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Observation
 
 enum TTMMatchPlayer: Int {
     case green = 1
@@ -36,9 +37,10 @@ enum TTMMatchPlayer: Int {
     }
 }
 
-class TTMMatch: AnyObject {
+@Observable
+final class TTMMatch {
     
-    private let userDefaults: UserDefaults
+    @ObservationIgnored private let userDefaults: UserDefaults
     
     init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults

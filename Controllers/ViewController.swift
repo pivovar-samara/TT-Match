@@ -21,6 +21,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableViewTopMarginConstraint: NSLayoutConstraint!
     @IBOutlet weak var settingsButtonBottomMarginConstraint: NSLayoutConstraint!
 
+    fileprivate let viewModel = MatchViewModel()
     fileprivate var volumeHandler: TTMVolumeButtonHandler?
     
     fileprivate let gameCellId = "GameCell"
@@ -30,7 +31,7 @@ class ViewController: UIViewController {
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
-        return TTMMatch.currentMatch.matchFinished ? .darkContent : .default
+        return self.viewModel.matchWinner != nil ? .darkContent : .default
     }
 
     override func viewDidLoad() {
@@ -38,24 +39,24 @@ class ViewController: UIViewController {
         
         self.volumeHandler = TTMVolumeButtonHandler(up: { [weak self] in
             guard let strongSelf = self else { return }
-            strongSelf.simulateButtonTap(for: TTMMatch.currentMatch.players[1])
+            strongSelf.hardwareTap(strongSelf.viewModel.rightPlayer)
         }, downBlock: { [weak self] in
             guard let strongSelf = self else { return }
-            strongSelf.simulateButtonTap(for: TTMMatch.currentMatch.players[0])
+            strongSelf.hardwareTap(strongSelf.viewModel.leftPlayer)
         })
         self.volumeHandler?.start(true)
         
         self.buttonsContainer.layer.cornerRadius = 36.0
         
-        let longTapRecognizer1 = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.button1LongTapped(_:)))
+        let longTapRecognizer1 = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.buttonLongTapped(_:)))
         self.leftButton.addGestureRecognizer(longTapRecognizer1)
         self.leftButton.undoPosition = .left
-        self.leftButton.undoButton.addTarget(self, action: #selector(ViewController.player1UndoTapped(_:)), for: .touchUpInside)
+        self.leftButton.undoButton.addTarget(self, action: #selector(ViewController.undoTapped(_:)), for: .touchUpInside)
         
-        let longTapRecognizer2 = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.button2LongTapped(_:)))
+        let longTapRecognizer2 = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.buttonLongTapped(_:)))
         self.rightButton.addGestureRecognizer(longTapRecognizer2)
         self.rightButton.undoPosition = .right
-        self.rightButton.undoButton.addTarget(self, action: #selector(ViewController.player2UndoTapped(_:)), for: .touchUpInside)
+        self.rightButton.undoButton.addTarget(self, action: #selector(ViewController.undoTapped(_:)), for: .touchUpInside)
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.backgroundTapped(_:)))
         self.view.addGestureRecognizer(tapRecognizer)
@@ -91,63 +92,45 @@ class ViewController: UIViewController {
             self.tableViewTopMarginConstraint.constant = 8.0
             self.settingsButtonBottomMarginConstraint.constant = 16.0
         }
+        
+        self.observeInputLock()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.updateFromCurrentGame(false, playerAction: nil)
+        self.updateUI()
     }
 
     fileprivate func showRestartMatchDialog(_ sender: UIView? = nil) {
         let dialog = UIAlertController(title: L("Shake_ActionSheet_Title"), message: nil, preferredStyle: .actionSheet)
         let resetGameAction = UIAlertAction(title: L("Shake_ActionSheet_Confirm"), style: .destructive, handler: {[weak self] (action) in
-            TTMAnalytics.matchReset()
-            TTMMatch.currentMatch.reset()
-            self?.updateFromCurrentGame(false, playerAction: nil)
+            self?.viewModel.resetMatch()
+            self?.updateUI()
         })
         dialog.addAction(resetGameAction)
         let cancelResetGameAction = UIAlertAction(title: L("Cancel"), style: .cancel, handler: nil)
         dialog.addAction(cancelResetGameAction)
-        if let popover = dialog.popoverPresentationController {
-            popover.permittedArrowDirections = .down
-            popover.sourceView = self.view
-            let view: UIView = sender ?? self.settingsButton
-            popover.sourceRect = self.view.convert(view.frame, from: view.superview)
-        }
-        self.present(dialog, animated: true, completion: nil)
+        self.presentActionSheet(dialog, from: sender)
     }
     
     fileprivate func showGameSettingsDialog(_ sender: UIView? = nil) {
         let dialog = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let threeGameAction = UIAlertAction(title: L("MatchSettings_3games"), style: .default, handler: {[weak self] (action) in
-            var settings = TTMMatch.currentMatch.settings
-            settings.gameCount = 3
-            TTMMatch.currentMatch.settings = settings
-            TTMAnalytics.settingsChanged(gameCount: 3)
-            self?.updateFromCurrentGame(false, playerAction: nil)
-        })
-        dialog.addAction(threeGameAction)
-        let fiveGameAction = UIAlertAction(title: L("MatchSettings_5games"), style: .default, handler: {[weak self] (action) in
-            var settings = TTMMatch.currentMatch.settings
-            settings.gameCount = 5
-            TTMMatch.currentMatch.settings = settings
-            TTMAnalytics.settingsChanged(gameCount: 5)
-            self?.updateFromCurrentGame(false, playerAction: nil)
-        })
-        dialog.addAction(fiveGameAction)
-        let sevenGameAction = UIAlertAction(title: L("MatchSettings_7games"), style: .default, handler: {[weak self] (action) in
-            var settings = TTMMatch.currentMatch.settings
-            settings.gameCount = 7
-            TTMMatch.currentMatch.settings = settings
-            TTMAnalytics.settingsChanged(gameCount: 7)
-            self?.updateFromCurrentGame(false, playerAction: nil)
-        })
-        dialog.addAction(sevenGameAction)
+        let options = [(3, "MatchSettings_3games"), (5, "MatchSettings_5games"), (7, "MatchSettings_7games")]
+        for (gameCount, titleKey) in options {
+            let action = UIAlertAction(title: L(titleKey), style: .default, handler: {[weak self] (action) in
+                self?.viewModel.setGameCount(gameCount)
+                self?.updateUI()
+            })
+            dialog.addAction(action)
+        }
         
         let cancelAction = UIAlertAction(title: L("Cancel"), style: .cancel, handler: nil)
         dialog.addAction(cancelAction)
-        
+        self.presentActionSheet(dialog, from: sender)
+    }
+    
+    fileprivate func presentActionSheet(_ dialog: UIAlertController, from sender: UIView?) {
         if let popover = dialog.popoverPresentationController {
             popover.permittedArrowDirections = .down
             popover.sourceView = self.view
@@ -157,184 +140,120 @@ class ViewController: UIViewController {
         self.present(dialog, animated: true, completion: nil)
     }
 
-    func updateFromCurrentGame(_ animated: Bool, playerAction: TTMMatchPlayer?, handleRandomServe: Bool = true) {
+    /// Renders the view model's state. `animatedPlayer` gets the point animation on their button.
+    func updateUI(animatedPlayer: TTMMatchPlayer? = nil, handleRandomServe: Bool = true) {
+        let viewModel = self.viewModel
+        let match = viewModel.match
+        
         self.gamesTableView.reloadData()
         
-        let match = TTMMatch.currentMatch
+        let leftPlayer = viewModel.leftPlayer
+        let rightPlayer = viewModel.rightPlayer
+        self.leftButton.update(match, player: leftPlayer, animated: leftPlayer == animatedPlayer)
+        self.rightButton.update(match, player: rightPlayer, animated: rightPlayer == animatedPlayer)
         
-        let leftPlayer = match.players[0]
-        let rightPlayer = match.players[1]
-        self.leftButton.update(match, player: leftPlayer, animated: animated && leftPlayer == playerAction)
-        self.rightButton.update(match, player: rightPlayer, animated: animated && rightPlayer == playerAction)
+        self.setNeedsStatusBarAppearanceUpdate()
+        self.view.backgroundColor = viewModel.matchWinner?.color() ?? UIColor.white
+        self.buttonsContainer.backgroundColor = viewModel.gameWinner?.color() ?? UIColor.clear
+        UIApplication.shared.isIdleTimerDisabled = viewModel.isIdleTimerDisabled
         
-        if match.matchFinished {
-            UIApplication.shared.isIdleTimerDisabled = false
-            self.matchFinished(match.winner)
+        switch viewModel.settingsMode {
+        case .hidden:
             self.settingsButton.isHidden = true
-        } else if match.gameFinished {
-            self.gameFinished(match.gameWinner)
+        case .gameCount(let gameCount):
             self.settingsButton.isHidden = false
-            self.settingsButton.setImage(UIImage(named: "settings")?.tinted(with: UIColor.white.withAlphaComponent(0.5)), for: .normal)
-            self.settingsButton.backgroundColor = nil
-        } else {
-            self.setNeedsStatusBarAppearanceUpdate()
-            self.view.backgroundColor = UIColor.white
-            self.buttonsContainer.backgroundColor = UIColor.clear
-            UIApplication.shared.isIdleTimerDisabled = true
-            self.settingsButton.isHidden = false
-            self.settingsButton.setImage(UIImage(named: "settings")?.tinted(with: UIColor.ttmGrayColor), for: .normal)
+            self.settingsButton.setImage(nil, for: .normal)
+            self.settingsButton.setTitle("\(gameCount)", for: .normal)
             self.settingsButton.backgroundColor = UIColor.ttmGrayColor.withAlphaComponent(0.2)
+        case .reset:
+            self.settingsButton.isHidden = false
+            self.settingsButton.setTitle(nil, for: .normal)
+            if viewModel.gameWinner != nil {
+                self.settingsButton.setImage(UIImage(named: "settings")?.tinted(with: UIColor.white.withAlphaComponent(0.5)), for: .normal)
+                self.settingsButton.backgroundColor = nil
+            } else {
+                self.settingsButton.setImage(UIImage(named: "settings")?.tinted(with: UIColor.ttmGrayColor), for: .normal)
+                self.settingsButton.backgroundColor = UIColor.ttmGrayColor.withAlphaComponent(0.2)
+            }
         }
         
-        if match.serve == nil {
-            if handleRandomServe {
-                self.randomServeButtonBackground.isHidden = false
-                self.randomServeButton.isHidden = false
+        if handleRandomServe {
+            self.randomServeButtonBackground.isHidden = !viewModel.showsServeRandomizer
+            self.randomServeButton.isHidden = !viewModel.showsServeRandomizer
+        }
+        self.gamesTableView.isHidden = !viewModel.showsGames
+    }
+    
+    /// Mirrors the view model's input lock onto the view, so touches are ignored while it is locked.
+    fileprivate func observeInputLock() {
+        withObservationTracking {
+            self.view.isUserInteractionEnabled = !self.viewModel.isInputLocked
+        } onChange: { [weak self] in
+            Task { @MainActor in
+                self?.observeInputLock()
             }
-            self.gamesTableView.isHidden = true
-            self.settingsButton.setImage(nil, for: .normal)
-            self.settingsButton.setTitle("\(match.settings.gameCount)", for: .normal)
-        } else {
-            if handleRandomServe {
-                self.randomServeButtonBackground.isHidden = true
-                self.randomServeButton.isHidden = true
-            }
-            self.gamesTableView.isHidden = false
-            self.settingsButton.setTitle(nil, for: .normal)
         }
     }
     
     @IBAction func randomizeServe(_ sender: UIButton) {
-        guard TTMMatch.currentMatch.firstServe == nil else { return }
+        guard self.viewModel.canRandomizeServe else { return }
         
-        TTMSoundManager.sharedManager.playSystemSound(type: TTMSoundType.tap)
+        self.viewModel.beginServeRandomization()
         
         self.animateRandomizationServe {[weak self] in
-            TTMSoundManager.sharedManager.playSystemSound(type: TTMSoundType.tapServiceChanged)
-            let player = TTMMatchPlayer.rand()
-            TTMMatch.currentMatch.firstServe = player
-            TTMAnalytics.matchStarted(gameCount: TTMMatch.currentMatch.settings.gameCount)
-            self?.updateFromCurrentGame(false, playerAction: player, handleRandomServe: false)
+            guard let strongSelf = self else { return }
+            strongSelf.viewModel.completeServeRandomization()
+            strongSelf.updateUI(handleRandomServe: false)
         }
     }
     
     @IBAction func showSettings(_ sender: UIButton) {
-        if TTMMatch.currentMatch.serve == nil {
+        switch self.viewModel.settingsMode {
+        case .gameCount:
             self.showGameSettingsDialog(sender)
-        } else {
+        case .reset:
             self.showRestartMatchDialog(sender)
+        case .hidden:
+            break
         }
     }
     
     @IBAction func player1ScoreTapped(_ sender: TTMSelectableButton) {
-        self.processTap(TTMMatch.currentMatch.players[0])
+        self.tap(self.viewModel.leftPlayer)
     }
     
     @IBAction func player2ScoreTapped(_ sender: TTMSelectableButton) {
-        self.processTap(TTMMatch.currentMatch.players[1])
+        self.tap(self.viewModel.rightPlayer)
     }
     
-    @objc func player1UndoTapped(_ sender: UIButton) {
-        self.cancelLastAction()
-    }
-
-    @objc func player2UndoTapped(_ sender: UIButton) {
-        self.cancelLastAction()
+    @objc func undoTapped(_ sender: UIButton) {
+        self.undo()
     }
     
-    fileprivate func processTap(_ player: TTMMatchPlayer) {
-        let match = TTMMatch.currentMatch
-        
-        let hasServe = match.serve != nil
-        let gameFinished = match.gameFinished
-        let matchFinished = match.matchFinished
-        let isMatchStart = !matchFinished && !hasServe
-
-        if matchFinished {
-            TTMSoundManager.sharedManager.playSystemSound(type: TTMSoundType.newGame)
-            self.setNeedsStatusBarAppearanceUpdate()
-            self.view.backgroundColor = UIColor.white
-            match.reset()
-        } else {
-            if gameFinished {
-                self.buttonsContainer.backgroundColor = UIColor.clear
-            }
-            if isMatchStart {
-                TTMAnalytics.matchStarted(gameCount: match.settings.gameCount)
-            }
-            match.playerAction(player)
-        }
-        
-        let gameFinishedAfter = match.gameFinished
-        let matchFinishedAfter = match.matchFinished
-
-        if !matchFinished && matchFinishedAfter {
-            TTMAnalytics.matchCompleted(gamesPlayed: match.gameScores.count)
-        } else if !gameFinished && gameFinishedAfter {
-            TTMAnalytics.gameCompleted(gameNumber: match.gameScores.count)
-        }
-
-        self.updateFromCurrentGame(hasServe && !gameFinished && !matchFinished && !gameFinishedAfter && !matchFinishedAfter, playerAction: player)
-        self.disableActions()
+    fileprivate func tap(_ player: TTMMatchPlayer) {
+        let animated = self.viewModel.tap(player)
+        self.updateUI(animatedPlayer: animated ? player : nil)
     }
     
-    fileprivate func simulateButtonTap(for player: TTMMatchPlayer) {
-        guard self.view.isUserInteractionEnabled else { return }
-        self.processTap(player)
+    fileprivate func hardwareTap(_ player: TTMMatchPlayer) {
+        let animated = self.viewModel.hardwareTap(player)
+        self.updateUI(animatedPlayer: animated ? player : nil)
     }
     
-    fileprivate func disableActions() {
-        self.view.isUserInteractionEnabled = false
-        delay(secondsToDeclineTaps, closure: {[weak self] ()->() in
-            self?.view.isUserInteractionEnabled = true
-            })
-    }
-    
-    @objc func button1LongTapped(_ sender: UILongPressGestureRecognizer) {
+    @objc func buttonLongTapped(_ sender: UILongPressGestureRecognizer) {
         if (sender.state == .began) {
-            self.cancelLastAction()
-        }
-    }
-
-    @objc func button2LongTapped(_ sender: UILongPressGestureRecognizer) {
-        if (sender.state == .began) {
-            self.cancelLastAction()
+            self.undo()
         }
     }
 
     @objc func backgroundTapped(_ sender: UITapGestureRecognizer) {
-        if TTMMatch.currentMatch.gameFinished || TTMMatch.currentMatch.matchFinished {
-            self.processTap(TTMMatch.currentMatch.players[0])
-        }
+        self.viewModel.backgroundTap()
+        self.updateUI()
     }
 
-    @objc func cancelLastAction() {
-        if TTMMatch.currentMatch.firstServe != nil {
-            TTMAnalytics.undoUsed()
-        }
-        TTMMatch.currentMatch.undo()
-        if !TTMMatch.currentMatch.matchFinished {
-            self.setNeedsStatusBarAppearanceUpdate()
-            self.view.backgroundColor = UIColor.white
-        }
-        if !TTMMatch.currentMatch.gameFinished {
-            self.buttonsContainer.backgroundColor = UIColor.clear
-        }
-        self.updateFromCurrentGame(false, playerAction: nil)
-        self.disableActions()
-    }
-    
-    func matchFinished(_ winner: TTMMatchPlayer?) {
-        if let winner = winner {
-            self.setNeedsStatusBarAppearanceUpdate()
-            self.view.backgroundColor = winner.color()
-        }
-    }
-    
-    func gameFinished(_ winner: TTMMatchPlayer?) {
-        if let winner = winner {
-            self.buttonsContainer.backgroundColor = winner.color()
-        }
+    fileprivate func undo() {
+        self.viewModel.undo()
+        self.updateUI()
     }
 }
 
@@ -344,25 +263,17 @@ extension ViewController: UITableViewDelegate {
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return TTMMatch.currentMatch.settings.gameCount
+        return self.viewModel.match.settings.gameCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: gameCellId, for: indexPath) as! TTMGameCell
-        cell.update(TTMMatch.currentMatch, gameIndex: indexPath.row, players: TTMMatch.currentMatch.players)
+        cell.update(self.viewModel.match, gameIndex: indexPath.row, players: self.viewModel.match.players)
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 32.0
-    }
-}
-
-extension ViewController: UITextFieldDelegate {
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.simulateButtonTap(for: TTMMatch.currentMatch.players[0])
-        return true
     }
 }
 
