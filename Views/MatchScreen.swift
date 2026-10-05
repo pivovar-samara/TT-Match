@@ -24,8 +24,7 @@ struct MatchScreen: View {
         GeometryReader { proxy in
             let isCompact = Self.isCompact(proxy)
             let margin: CGFloat = isCompact ? 0.0 : 16.0
-            content(isCompact: isCompact)
-                .padding(.horizontal, 16.0)
+            content(isCompact: isCompact, foldLayout: Self.foldLayout(proxy))
                 .padding(.top, margin)
                 .padding(.bottom, margin + proxy.safeAreaInsets.top)
                 .ignoresSafeArea(.container, edges: .bottom)
@@ -49,21 +48,71 @@ struct MatchScreen: View {
         return min(width, height) < 370.0
     }
 
-    private func content(isCompact: Bool) -> some View {
-        ZStack {
-            HStack(spacing: 16.0) {
-                scoreButton(player: viewModel.leftPlayer, side: .left)
-                centerColumn(isCompact: isCompact)
-                scoreButton(player: viewModel.rightPlayer, side: .right)
-            }
-            .background(RoundedRectangle(cornerRadius: 36.0).fill(viewModel.gameWinner?.swiftUIColor ?? .clear))
+    /// The layout around a vertical fold (iPhone Duo inner display in landscape), nil without one.
+    /// Inactive folds count too (the display is flat), so the layout does not jump while folding.
+    private static func foldLayout(_ proxy: GeometryProxy) -> TTMFoldLayout? {
+        guard #available(iOS 27.1, *) else { return nil }
+        let folds = proxy.reservedRegions(kind: .division, options: .includeInactive).map(\.frame)
+        return folds.lazy.compactMap { TTMFoldLayout(containerWidth: proxy.size.width, fold: $0) }.first
+    }
 
-            if viewModel.showsServeRandomizer {
-                RandomServeButton(
-                    onStart: viewModel.beginServeRandomization,
-                    onPick: { viewModel.completeServeRandomization() },
-                    onFinish: viewModel.finishServeRandomization)
+    @ViewBuilder
+    private func content(isCompact: Bool, foldLayout: TTMFoldLayout?) -> some View {
+        if let foldLayout {
+            foldedContent(isCompact: isCompact, layout: foldLayout)
+        } else {
+            ZStack {
+                HStack(spacing: 16.0) {
+                    scoreButton(player: viewModel.leftPlayer, side: .left)
+                    centerColumn(isCompact: isCompact)
+                    scoreButton(player: viewModel.rightPlayer, side: .right)
+                }
+                .background(gameWinnerBackground)
+
+                randomServeButton
             }
+            .padding(.horizontal, 16.0)
+        }
+    }
+
+    /// The score buttons meet at the fold; the games column sits at the edge opposite the camera strip.
+    private func foldedContent(isCompact: Bool, layout: TTMFoldLayout) -> some View {
+        HStack(spacing: TTMFoldLayout.spacing) {
+            if layout.columnEdge == .leading {
+                centerColumn(isCompact: isCompact)
+                    .frame(width: layout.columnWidth)
+            }
+            ZStack {
+                HStack(spacing: layout.gap) {
+                    scoreButton(player: viewModel.leftPlayer, side: .left)
+                        .frame(width: layout.buttonWidth)
+                    scoreButton(player: viewModel.rightPlayer, side: .right)
+                        .frame(width: layout.buttonWidth)
+                }
+
+                randomServeButton
+            }
+            if layout.columnEdge == .trailing {
+                centerColumn(isCompact: isCompact)
+                    .frame(width: layout.columnWidth)
+            }
+        }
+        .background(gameWinnerBackground)
+        .padding(.leading, layout.leadingPadding)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var gameWinnerBackground: some View {
+        RoundedRectangle(cornerRadius: 36.0).fill(viewModel.gameWinner?.swiftUIColor ?? .clear)
+    }
+
+    @ViewBuilder
+    private var randomServeButton: some View {
+        if viewModel.showsServeRandomizer {
+            RandomServeButton(
+                onStart: viewModel.beginServeRandomization,
+                onPick: { viewModel.completeServeRandomization() },
+                onFinish: viewModel.finishServeRandomization)
         }
     }
 
