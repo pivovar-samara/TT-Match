@@ -24,7 +24,7 @@ struct RandomServeButton: View {
     var body: some View {
         ZStack {
             Circle()
-                .fill(.white)
+                .fill(Color.ttmBackground)
                 .frame(width: 140.0, height: 140.0)
                 .opacity(isExploding ? 0.0 : 1.0)
 
@@ -33,7 +33,10 @@ struct RandomServeButton: View {
                     .renderingMode(.template)
                     .foregroundStyle(Color.ttmGray)
                     .frame(width: 128.0, height: 128.0)
-                    .background(Circle().fill(Color(uiColor: UIColor.ttmGrayColor.opaqueColor(0.2))))
+                    // A plain fill, not Liquid Glass: interactive glass resizes itself on touch, which fights
+                    // the spin and scale animation. The opaque underlay hides the score button borders.
+                    .background(Circle().fill(Color.ttmGray.opacity(0.2)))
+                    .background(Circle().fill(Color.ttmBackground))
             }
             .buttonStyle(.plain)
             .scaleEffect(scale)

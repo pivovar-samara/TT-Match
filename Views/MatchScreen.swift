@@ -29,7 +29,7 @@ struct MatchScreen: View {
                 .padding(.bottom, margin + proxy.safeAreaInsets.top)
                 .ignoresSafeArea(.container, edges: .bottom)
         }
-        .background((viewModel.matchWinner?.swiftUIColor ?? .white).ignoresSafeArea())
+        .background((viewModel.matchWinner?.swiftUIColor ?? .ttmBackground).ignoresSafeArea())
         .contentShape(Rectangle())
         .onTapGesture(perform: viewModel.backgroundTap)
         .allowsHitTesting(viewModel.acceptsInput)
@@ -92,7 +92,7 @@ struct MatchScreen: View {
             Button(action: viewModel.showSettings) {
                 settingsLabel(mode)
                     .frame(width: 48.0, height: 48.0)
-                    .background(Circle().fill(settingsBackground(mode)))
+                    .ttmCircleBackground(settingsBackground(mode))
                     .contentShape(Circle())
             }
             .buttonStyle(.plain)
@@ -166,6 +166,38 @@ struct MatchScreen: View {
     }
 }
 
-#Preview {
-    MatchScreen(viewModel: MatchViewModel(match: TTMMatch(userDefaults: UserDefaults(suiteName: "Preview")!)))
+#if DEBUG
+/// A match for previews, stored in its own defaults suite. Scores are `[green, blue]` per game.
+@MainActor
+private func previewScreen(games: [[Int]] = [[0, 0]], firstServe: TTMMatchPlayer? = nil, gameCount: Int = 5) -> MatchScreen {
+    let suiteName = "Preview.\(UUID().uuidString)"
+    let match = TTMMatch(userDefaults: UserDefaults(suiteName: suiteName)!)
+    var settings = match.settings
+    settings.gameCount = gameCount
+    match.settings = settings
+    match.gameScores = games.map { [.green: $0[0], .blue: $0[1]] }
+    match.firstServe = firstServe
+    return MatchScreen(viewModel: MatchViewModel(match: match))
 }
+
+#Preview("Before the match", traits: .landscapeLeft) {
+    previewScreen()
+}
+
+#Preview("In a game", traits: .landscapeLeft) {
+    previewScreen(games: [[11, 7], [6, 8]], firstServe: .green)
+}
+
+#Preview("Game finished", traits: .landscapeLeft) {
+    previewScreen(games: [[11, 7], [9, 11]], firstServe: .green)
+}
+
+#Preview("Match finished", traits: .landscapeLeft) {
+    previewScreen(games: [[11, 7], [9, 11], [11, 4], [11, 9]], firstServe: .green)
+}
+
+#Preview("In a game, dark", traits: .landscapeLeft) {
+    previewScreen(games: [[11, 7], [6, 8]], firstServe: .green)
+        .preferredColorScheme(.dark)
+}
+#endif

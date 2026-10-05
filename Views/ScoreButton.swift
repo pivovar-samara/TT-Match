@@ -88,7 +88,7 @@ struct ScoreButton: View {
                 .renderingMode(.template)
                 .foregroundStyle(isPlain ? Color.white.opacity(0.5) : Color.ttmGray)
                 .frame(width: 48.0, height: 48.0)
-                .background(Circle().fill(isPlain ? Color.clear : Color.ttmGray.opacity(0.2)))
+                .ttmCircleBackground(isPlain ? Color.clear : Color.ttmGray.opacity(0.2))
                 .contentShape(Circle())
         }
         .buttonStyle(.plain)

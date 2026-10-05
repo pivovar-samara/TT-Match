@@ -69,7 +69,10 @@ Guidance for Claude Code when working in this repository.
 - Use `L("key")` (defined in `TTMHelper.swift`) instead of `NSLocalizedString` directly
 - Device detection: use the global constants `IS_IPAD` and `IS_SMALL_SCREEN` (defined in `TTMHelper.swift`) — do not query `UIDevice` or `UIScreen` directly
 - Delay helper: `delay(_:closure:)` (defined in `TTMHelper.swift`) wraps `DispatchQueue.main.asyncAfter` — call as `delay(0.3) { ... }`
-- Colors: use `Color.ttmBlue`, `Color.ttmGreen`, `Color.ttmGray` and `TTMMatchPlayer.swiftUIColor` (defined on top of `UIColor.ttm*Color`)
+- Colors: use `Color.ttmBlue`, `Color.ttmGreen`, `Color.ttmGray` and `TTMMatchPlayer.swiftUIColor` (defined on top of `UIColor.ttm*Color`); `Color.ttmBackground` (system background) for the screen — the app supports dark mode, so never hard-code white/black backgrounds. Content on player-colored fills stays white
+- Circular controls (settings, undo) use `.ttmCircleBackground(_:)` (`Extensions/ViewExtensions.swift`): Liquid Glass on iOS 26+, a plain fill before. Not for views that animate scale or rotation (the serve randomizer): interactive glass resizes itself on touch and the animation glitches
+- Keep UI behavior close to the system defaults (status bar, dialogs, color scheme) instead of overriding them
+- `MatchScreen.swift` has `#Preview`s for the main states (light and dark); update them when adding a state
 - Fonts: use `Font.ttmBold/ttmHeavy/ttmBlack(_:)`
 
 ---
