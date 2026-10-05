@@ -21,6 +21,28 @@ struct MatchScreen: View {
     }
 
     var body: some View {
+        // As in the storyboard: the score area is centered in the whole window, with its top margin
+        // measured from the top safe area. Padding inside the safe area would add the home indicator
+        // inset at the bottom and push everything up.
+        GeometryReader { proxy in
+            let margin: CGFloat = IS_SMALL_SCREEN ? 0.0 : 16.0
+            content
+                .padding(.horizontal, 16.0)
+                .padding(.top, margin)
+                .padding(.bottom, margin + proxy.safeAreaInsets.top)
+                .ignoresSafeArea(.container, edges: .bottom)
+        }
+        .background((viewModel.matchWinner?.swiftUIColor ?? .white).ignoresSafeArea())
+        .contentShape(Rectangle())
+        .onTapGesture(perform: viewModel.backgroundTap)
+        .allowsHitTesting(!viewModel.isInputLocked)
+        .onChange(of: viewModel.isIdleTimerDisabled, initial: true) { _, isDisabled in
+            UIApplication.shared.isIdleTimerDisabled = isDisabled
+        }
+        .onAppear(perform: startVolumeButtons)
+    }
+
+    private var content: some View {
         ZStack {
             HStack(spacing: 16.0) {
                 scoreButton(player: viewModel.leftPlayer, side: .left)
@@ -40,17 +62,6 @@ struct MatchScreen: View {
                     onFinish: { isRandomizingServe = false })
             }
         }
-        .padding(.horizontal, 16.0)
-        .padding(.vertical, IS_SMALL_SCREEN ? 0.0 : 16.0)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background((viewModel.matchWinner?.swiftUIColor ?? .white).ignoresSafeArea())
-        .contentShape(Rectangle())
-        .onTapGesture(perform: viewModel.backgroundTap)
-        .allowsHitTesting(!viewModel.isInputLocked)
-        .onChange(of: viewModel.isIdleTimerDisabled, initial: true) { _, isDisabled in
-            UIApplication.shared.isIdleTimerDisabled = isDisabled
-        }
-        .onAppear(perform: startVolumeButtons)
     }
 
     // MARK: - Parts

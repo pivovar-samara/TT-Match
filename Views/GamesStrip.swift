@@ -40,7 +40,7 @@ struct GameRow: View {
         .frame(height: 32.0)
         .accessibilityElement(children: .ignore)
         .accessibilityIdentifier("game.\(gameIndex)")
-        .accessibilityValue(scores.map { "\($0.left)-\($0.right)" } ?? "")
+        .accessibilityValue(Text(verbatim: scores.map { "\($0.left)-\($0.right)" } ?? ""))
     }
 
     private func label(_ score: Int, isWinner: Bool) -> some View {
