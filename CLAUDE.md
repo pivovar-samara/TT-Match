@@ -59,6 +59,7 @@ Guidance for Claude Code when working in this repository.
 | Localized strings | `Resources/Localizable.xcstrings` |
 | Volume button handling | `Helpers/TTMVolumeButtonHandler.swift` |
 | Layout around the iPhone Duo fold | `Helpers/TTMFoldLayout.swift` (geometry), `MatchScreen.foldedContent` |
+| iPhone Duo stand mode (half open, horizontal fold) | `MatchScreen.standContent` (scoreboard on top, controls below; display-only `ScoreButton(isInteractive: false)`) |
 | UI test launch mode / seeded match | `Helpers/TTMUITestSupport.swift` |
 | Unit tests (fixture: `MatchFixture.swift`) | `TT MatchTests/` (app target files are not folder-synchronized — add new app sources to `project.pbxproj`; test targets are synchronized) |
 | UI tests (base: `TTMUITestCase.swift`) | `TT MatchUITests/` |

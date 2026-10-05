@@ -20,6 +20,8 @@ struct ScoreButton: View {
     let pointAnimationTrigger: Int
     let onTap: () -> Void
     let onUndo: () -> Void
+    /// False for a display-only copy (the stand mode scoreboard): no gestures, no undo, hidden from accessibility.
+    var isInteractive = true
 
     @State private var isPressed = false
 
@@ -27,8 +29,13 @@ struct ScoreButton: View {
 
     var body: some View {
         ZStack(alignment: side == .left ? .bottomLeading : .bottomTrailing) {
-            scoreArea
-            if hasServe {
+            if isInteractive {
+                scoreArea
+            } else {
+                scoreFace
+                    .accessibilityHidden(true)
+            }
+            if isInteractive && hasServe {
                 undoButton
                     .padding(16)
                     .transition(.opacity)
@@ -39,6 +46,20 @@ struct ScoreButton: View {
     // MARK: - Score area
 
     private var scoreArea: some View {
+        scoreFace
+            .contentShape(RoundedRectangle(cornerRadius: cornerRadius))
+            .onTapGesture(perform: onTap)
+            .onLongPressGesture(minimumDuration: 0.5, perform: onUndo, onPressingChanged: { isPressed = $0 })
+            .accessibilityElement(children: .ignore)
+            .accessibilityAddTraits(.isButton)
+            .accessibilityLabel(L(player == .green ? "Accessibility_Player_Green" : "Accessibility_Player_Blue"))
+            .accessibilityValue(String(score))
+            .accessibilityIdentifier(side == .left ? "score.left" : "score.right")
+            .accessibilityAction { onTap() }
+    }
+
+    /// The score, games score and serve state, without interaction.
+    private var scoreFace: some View {
         let shape = RoundedRectangle(cornerRadius: cornerRadius)
         return GeometryReader { proxy in
             ZStack(alignment: .bottom) {
@@ -68,15 +89,6 @@ struct ScoreButton: View {
             CubicKeyframe(0.85, duration: secondsToDeclineTaps / 2.0)
             SpringKeyframe(1.0, duration: secondsToDeclineTaps / 2.0)
         }
-        .contentShape(shape)
-        .onTapGesture(perform: onTap)
-        .onLongPressGesture(minimumDuration: 0.5, perform: onUndo, onPressingChanged: { isPressed = $0 })
-        .accessibilityElement(children: .ignore)
-        .accessibilityAddTraits(.isButton)
-        .accessibilityLabel(L(player == .green ? "Accessibility_Player_Green" : "Accessibility_Player_Blue"))
-        .accessibilityValue(String(score))
-        .accessibilityIdentifier(side == .left ? "score.left" : "score.right")
-        .accessibilityAction { onTap() }
     }
 
     // MARK: - Undo
