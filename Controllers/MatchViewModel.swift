@@ -30,11 +30,16 @@ final class MatchViewModel {
     private(set) var pointAnimations: [TTMMatchPlayer: Int] = [:]
 
     @ObservationIgnored private let analytics: TTMAnalyticsTracking
+    /// Runs a closure after a number of seconds. Tests replace it to control when the input lock ends.
+    @ObservationIgnored private let schedule: (Double, @escaping () -> Void) -> Void
     @ObservationIgnored private var inputLockID = 0
 
-    init(match: TTMMatch = TTMMatch.currentMatch, analytics: TTMAnalyticsTracking = TTMAnalyticsTracker()) {
+    init(match: TTMMatch = TTMMatch.currentMatch,
+         analytics: TTMAnalyticsTracking = TTMAnalyticsTracker(),
+         schedule: @escaping (Double, @escaping () -> Void) -> Void = { delay($0, closure: $1) }) {
         self.match = match
         self.analytics = analytics
+        self.schedule = schedule
     }
 
     // MARK: - State
@@ -163,7 +168,7 @@ final class MatchViewModel {
         isInputLocked = true
         inputLockID += 1
         let lockID = inputLockID
-        delay(secondsToDeclineTaps) { [weak self] in
+        schedule(secondsToDeclineTaps) { [weak self] in
             guard let self, self.inputLockID == lockID else { return }
             self.isInputLocked = false
         }
