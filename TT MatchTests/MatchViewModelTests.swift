@@ -6,6 +6,22 @@
 import Testing
 @testable import TT_Match
 
+/// Holds scheduled closures until the test runs them, so the input lock ends when the test decides.
+final class ManualScheduler {
+    private(set) var pending: [() -> Void] = []
+
+    func schedule(_ delay: Double, _ closure: @escaping () -> Void) {
+        pending.append(closure)
+    }
+
+    /// Runs everything scheduled so far: the input lock ends.
+    func runAll() {
+        let closures = pending
+        pending = []
+        closures.forEach { $0() }
+    }
+}
+
 /// Records analytics events instead of sending them.
 final class AnalyticsSpy: TTMAnalyticsTracking {
     private(set) var events: [String] = []
@@ -24,12 +40,13 @@ struct MatchViewModelTests {
 
     let fixture: MatchFixture
     let analytics = AnalyticsSpy()
+    let scheduler = ManualScheduler()
     let viewModel: MatchViewModel
     var match: TTMMatch { fixture.match }
 
     init() {
         fixture = MatchFixture(gameCount: 3)
-        viewModel = MatchViewModel(match: fixture.match, analytics: analytics)
+        viewModel = MatchViewModel(match: fixture.match, analytics: analytics, schedule: scheduler.schedule)
     }
 
     @Test func coldStartOffersServeRandomizerAndGameCount() {
@@ -45,6 +62,8 @@ struct MatchViewModelTests {
         let animated = viewModel.tap(.green)
 
         #expect(!animated)
+        #expect(viewModel.leftPointAnimations == 0)
+        #expect(viewModel.rightPointAnimations == 0)
         #expect(match.firstServe == .green)
         #expect(!viewModel.showsServeRandomizer)
         #expect(viewModel.showsGames)
@@ -52,33 +71,72 @@ struct MatchViewModelTests {
         #expect(analytics.events == ["match_started:3"])
     }
 
-    @Test func pointIsAnimated() {
+    @Test func pointIsAnimatedOnScorerSide() {
         viewModel.tap(.green)
+        scheduler.runAll()
 
+        // First game: green is on the left.
         #expect(viewModel.tap(.blue))
         #expect(match.blueScore == 1)
+        #expect(viewModel.leftPointAnimations == 0)
+        #expect(viewModel.rightPointAnimations == 1)
     }
 
-    @Test func tapLocksInputAndHardwareTapIsIgnoredMeanwhile() {
+    @Test func sideSwitchBetweenGamesDoesNotAnimate() {
+        match.start()
+        match.score(.green, times: 10)
+        viewModel.tap(.green)
+        scheduler.runAll()
+
+        // Starts game 2: players switch sides, but nobody scored an animated point.
+        viewModel.backgroundTap()
+
+        #expect(viewModel.leftPlayer == .blue)
+        #expect(viewModel.leftPointAnimations == 0)
+        #expect(viewModel.rightPointAnimations == 0)
+    }
+
+    @Test func pointThatSwitchesSidesInDecidingGameAnimatesScorerNewSide() {
+        match.start()
+        match.winGame(.green)
+        match.winGame(.blue)
+        match.score(.green, times: 4)
+        #expect(viewModel.leftPlayer == .green)
+
+        // Green reaches 5 in the deciding game: sides switch, green is now on the right.
+        #expect(viewModel.tap(.green))
+
+        #expect(viewModel.rightPlayer == .green)
+        #expect(viewModel.leftPointAnimations == 0)
+        #expect(viewModel.rightPointAnimations == 1)
+    }
+
+    @Test func tapAndUndoAreIgnoredWhileInputIsLocked() {
         viewModel.tap(.green)
         #expect(viewModel.isInputLocked)
 
-        #expect(!viewModel.hardwareTap(.blue))
-        #expect(match.blueScore == 0)
-    }
-
-    @Test func earlierTimerDoesNotEndLaterLock() {
-        var scheduled: [() -> Void] = []
-        let viewModel = MatchViewModel(match: match, analytics: analytics, schedule: { _, closure in scheduled.append(closure) })
-
-        viewModel.tap(.green)
+        #expect(!viewModel.tap(.blue))
         viewModel.undo()
-        #expect(scheduled.count == 2)
 
-        scheduled[0]()
+        #expect(match.blueScore == 0)
+        #expect(match.firstServe == .green)
+        #expect(analytics.events == ["match_started:3"])
+
+        scheduler.runAll()
+        #expect(!viewModel.isInputLocked)
+        #expect(viewModel.tap(.blue))
+    }
+
+    @Test func staleTimerDoesNotEndLaterLock() {
+        viewModel.tap(.green)
+        let firstTimer = scheduler.pending[0]
+        scheduler.runAll()
+
+        viewModel.undo()
+        firstTimer()
         #expect(viewModel.isInputLocked)
 
-        scheduled[1]()
+        scheduler.runAll()
         #expect(!viewModel.isInputLocked)
     }
 
@@ -143,6 +201,7 @@ struct MatchViewModelTests {
 
     @Test func undoWithoutHistoryCancelsMatchStart() {
         viewModel.tap(.green)
+        scheduler.runAll()
 
         viewModel.undo()
 
@@ -161,12 +220,51 @@ struct MatchViewModelTests {
     @Test func serveRandomizationStartsMatch() {
         #expect(viewModel.canRandomizeServe)
 
-        viewModel.beginServeRandomization()
+        #expect(viewModel.beginServeRandomization())
         let player = viewModel.completeServeRandomization()
+        #expect(viewModel.showsServeRandomizer)
+        viewModel.finishServeRandomization()
 
+        #expect(player != nil)
         #expect(match.firstServe == player)
         #expect(!viewModel.canRandomizeServe)
+        #expect(!viewModel.showsServeRandomizer)
         #expect(analytics.events == ["match_started:3"])
+    }
+
+    @Test func inputIsIgnoredWhileServeIsRandomized() {
+        viewModel.beginServeRandomization()
+        #expect(!viewModel.acceptsInput)
+
+        #expect(!viewModel.tap(.blue))
+        #expect(match.firstServe == nil)
+
+        viewModel.completeServeRandomization()
+        let firstServe = match.firstServe
+        viewModel.undo()
+        #expect(match.firstServe == firstServe)
+        #expect(firstServe != nil)
+
+        viewModel.finishServeRandomization()
+        #expect(viewModel.acceptsInput)
+    }
+
+    @Test func randomizationDoesNotOverrideDecidedServe() {
+        #expect(viewModel.beginServeRandomization())
+        match.firstServe = .blue
+
+        #expect(viewModel.completeServeRandomization() == nil)
+        #expect(match.firstServe == .blue)
+        #expect(analytics.events.isEmpty)
+    }
+
+    @Test func randomizationCannotStartTwiceOrWhenServeIsDecided() {
+        #expect(viewModel.beginServeRandomization())
+        #expect(!viewModel.beginServeRandomization())
+        viewModel.completeServeRandomization()
+        viewModel.finishServeRandomization()
+
+        #expect(!viewModel.beginServeRandomization())
     }
 
     @Test func setGameCountUpdatesSettings() {
@@ -175,6 +273,43 @@ struct MatchViewModelTests {
         #expect(match.settings.gameCount == 5)
         #expect(viewModel.settingsMode == .gameCount(5))
         #expect(analytics.events == ["settings_changed:5"])
+    }
+
+    @Test func settingsOpenDialogForCurrentMode() {
+        viewModel.showSettings()
+        #expect(viewModel.presentedDialog == .gameCount)
+
+        viewModel.presentedDialog = nil
+        match.start()
+        viewModel.showSettings()
+        #expect(viewModel.presentedDialog == .reset)
+    }
+
+    @Test func scoringAndUndoAreIgnoredWhileDialogIsOpen() {
+        match.start()
+        viewModel.showSettings()
+
+        #expect(!viewModel.tap(.blue))
+        viewModel.undo()
+        #expect(match.blueScore == 0)
+        #expect(match.firstServe == .green)
+        #expect(!viewModel.isInputLocked)
+
+        viewModel.resetMatch()
+        #expect(match.firstServe == nil)
+    }
+
+    @Test func settingsAreIgnoredWhileInputIsLocked() {
+        viewModel.tap(.green)
+
+        viewModel.showSettings()
+        viewModel.setGameCount(5)
+        viewModel.resetMatch()
+
+        #expect(viewModel.presentedDialog == nil)
+        #expect(match.settings.gameCount == 3)
+        #expect(match.firstServe == .green)
+        #expect(analytics.events == ["match_started:3"])
     }
 
     @Test func resetMatchClearsScore() {
