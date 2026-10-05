@@ -6,10 +6,10 @@ Guidance for Claude Code when working in this repository.
 
 ## Project at a glance
 
-- **Type**: iOS app — SwiftUI screen (`MatchScreen`) hosted in a UIKit scene, being migrated from UIKit/storyboard
+- **Type**: iOS app — SwiftUI (`App` lifecycle, `@Observable` view model)
 - **Language**: Pure Swift — no Objective-C
 - **Dependencies**: Firebase via Swift Package Manager (`FirebaseAnalytics`, `FirebaseCrashlytics`), added in the Xcode project — no Podfile, no Package.swift
-- **Tests**: `TT MatchTests` (Swift Testing, unit tests for `TTMMatch`/`TTMMatchSettings`) and `TT MatchUITests` (XCUITest). They are the safety net for the planned UIKit → SwiftUI migration — keep them passing and keep the accessibility identifiers they rely on
+- **Tests**: `TT MatchTests` (Swift Testing, unit tests for `TTMMatch`/`TTMMatchSettings`) and `TT MatchUITests` (XCUITest). Keep them passing and keep the accessibility identifiers they rely on
 - **Deployment target**: `$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)` (iOS 17.0 with Xcode 27)
 
 ---
@@ -44,7 +44,8 @@ Guidance for Claude Code when working in this repository.
 | Game logic / serve rules | `Entities/TTMMatch.swift` |
 | Match configuration | `Entities/TTMMatchSettings.swift` |
 | Screen logic (intents, tap lockout, analytics, UI state) | `Controllers/MatchViewModel.swift` |
-| Screen layout, dialogs, volume buttons | `Views/MatchScreen.swift` (root view, created in `SceneDelegate`) |
+| App entry point | `TTMatchApp.swift` (`AppDelegate` is attached via `@UIApplicationDelegateAdaptor`) |
+| Screen layout, dialogs, volume buttons | `Views/MatchScreen.swift` (root view) |
 | Score button appearance | `Views/ScoreButton.swift` |
 | Completed game rows | `Views/GamesStrip.swift` |
 | Serve randomizer | `Views/RandomServeButton.swift` |
@@ -68,8 +69,8 @@ Guidance for Claude Code when working in this repository.
 - Use `L("key")` (defined in `TTMHelper.swift`) instead of `NSLocalizedString` directly
 - Device detection: use the global constants `IS_IPAD` and `IS_SMALL_SCREEN` (defined in `TTMHelper.swift`) — do not query `UIDevice` or `UIScreen` directly
 - Delay helper: `delay(_:closure:)` (defined in `TTMHelper.swift`) wraps `DispatchQueue.main.asyncAfter` — call as `delay(0.3) { ... }`
-- Colors: in SwiftUI use `Color.ttmBlue`, `Color.ttmGreen`, `Color.ttmGray` and `TTMMatchPlayer.swiftUIColor`; in UIKit `UIColor.ttm*Color`
-- Fonts: in SwiftUI use `Font.ttmBold/ttmHeavy/ttmBlack(_:)`; in UIKit `UIFont.ttm*` class methods
+- Colors: use `Color.ttmBlue`, `Color.ttmGreen`, `Color.ttmGray` and `TTMMatchPlayer.swiftUIColor` (defined on top of `UIColor.ttm*Color`)
+- Fonts: use `Font.ttmBold/ttmHeavy/ttmBlack(_:)`
 
 ---
 
@@ -78,7 +79,8 @@ Guidance for Claude Code when working in this repository.
 - **Do not break the singleton pattern** for `TTMMatch` or `TTMSoundManager` — `MatchViewModel()` defaults to `TTMMatch.currentMatch`, the shared instance
 - **Do not add new dependencies** (SPM packages or CocoaPods) unless the user explicitly requests it — Firebase is the only one
 - **Firebase is configured from build settings, not `GoogleService-Info.plist`**: keys come from `Config/Secrets.xcconfig` (git-ignored; generated on Xcode Cloud by `ci_scripts/ci_pre_xcodebuild.sh`) → Info.plist → `AppDelegate.configureFirebase()`. Missing keys mean Firebase is silently skipped. Never commit `Secrets.xcconfig` or real keys
-- **Screen logic lives in `MatchViewModel`** (`@Observable`, `@MainActor`): user intents, the tap lockout, analytics and the derived UI state. Views only call its intents and render its state. `TTMMatch` is `@Observable` too, so views may read the match directly. `Controllers/ViewController.swift`, `Main.storyboard` and the `TTMSelectableButton`/`TTMGameCell` xibs are no longer used and are removed in the next migration step — do not change them
+- **Launch order matters**: `AppDelegate.application(_:didFinishLaunchingWithOptions:)` (UI test setup, Firebase) runs before `TTMatchApp`'s `WindowGroup` builds `MatchScreen`, whose `MatchViewModel()` first touches `TTMMatch.currentMatch`. Do not access `TTMMatch.currentMatch` from `TTMatchApp.init`
+- **Screen logic lives in `MatchViewModel`** (`@Observable`, `@MainActor`): user intents, the tap lockout, analytics and the derived UI state. Views only call its intents and render its state. `TTMMatch` is `@Observable` too, so views may read the match directly.
 - **Analytics calls go through `TTMAnalytics`** — do not call `Analytics.logEvent` directly from controllers. `MatchViewModel` reports through the `TTMAnalyticsTracking` protocol (`TTMAnalyticsTracker` forwards to `TTMAnalytics`; tests pass a spy). Do not set user IDs or user properties; only aggregate, non-identifying events are collected (IDFV collection is disabled in Info.plist)
 - **Persistence is automatic**: model property changes trigger `didSet` which calls `save()` — do not add manual save calls in the controller
 - **Volume button handling** is encapsulated in `TTMVolumeButtonHandler`. It owns the `AVAudioSession` (`.playback` + `.mixWithOthers`) and the hidden `MPVolumeView` (HUD suppression). `MatchScreen` creates the handler on appear and calls `start(true)`. `TTMVolumeButtonHandler` is *not* a singleton — it is owned by `MatchScreen`
@@ -128,5 +130,4 @@ All serve logic lives in the `serve` computed property and related helpers in `T
 - Do not access `UIScreen.main.bounds` directly for layout decisions — use the `IS_SMALL_SCREEN` and `IS_IPAD` constants
 - Do not add `print` or `NSLog` statements for debugging without removing them before finishing — the build phase already warns on TODO/FIXME
 - Do not create new singleton classes without strong justification; the two existing ones (`TTMMatch`, `TTMSoundManager`) cover all shared state needs
-- **Do not rename `gamesLabel` back to `subtitleLabel`** in `TTMSelectableButton` — `UIButton` gained a `subtitleLabel` property in iOS 15 and the name collision causes a compiler error
 - Do not call `userDefaults.synchronize()` — it is a no-op since iOS 12 and will generate a deprecation warning
