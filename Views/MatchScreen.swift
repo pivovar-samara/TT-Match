@@ -210,4 +210,12 @@ private func previewScreen(games: [[Int]] = [[0, 0]], firstServe: TTMMatchPlayer
     previewScreen(games: [[11, 7], [6, 8]], firstServe: .green)
         .preferredColorScheme(.dark)
 }
+
+#Preview("iPhone Duo inner display, landscape", traits: .fixedLayout(width: 951.0, height: 669.0)) {
+    previewScreen(games: [[11, 7], [6, 8]], firstServe: .green)
+}
+
+#Preview("iPhone Duo inner display, portrait", traits: .fixedLayout(width: 669.0, height: 951.0)) {
+    previewScreen(games: [[11, 7], [6, 8]], firstServe: .green)
+}
 #endif
