@@ -92,6 +92,8 @@ struct MatchScreen: View {
                 .frame(width: 48.0, height: 48.0)
         } else {
             Button {
+                // Touches are blocked by allowsHitTesting, VoiceOver activation is not.
+                guard viewModel.acceptsInput else { return }
                 if mode == .reset {
                     showsResetDialog = true
                 } else {

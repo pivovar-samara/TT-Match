@@ -275,6 +275,17 @@ struct MatchViewModelTests {
         #expect(analytics.events == ["settings_changed:5"])
     }
 
+    @Test func settingsAreIgnoredWhileInputIsLocked() {
+        viewModel.tap(.green)
+
+        viewModel.setGameCount(5)
+        viewModel.resetMatch()
+
+        #expect(match.settings.gameCount == 3)
+        #expect(match.firstServe == .green)
+        #expect(analytics.events == ["match_started:3"])
+    }
+
     @Test func resetMatchClearsScore() {
         match.start()
         match.score(.green, times: 3)

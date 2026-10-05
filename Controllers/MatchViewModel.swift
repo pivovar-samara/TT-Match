@@ -174,14 +174,18 @@ final class MatchViewModel {
         isRandomizingServe = false
     }
 
+    /// Ignored while input is locked or the serve is being randomized.
     func setGameCount(_ gameCount: Int) {
+        guard acceptsInput else { return }
         var settings = match.settings
         settings.gameCount = gameCount
         match.settings = settings
         analytics.settingsChanged(gameCount: gameCount)
     }
 
+    /// Ignored while input is locked or the serve is being randomized.
     func resetMatch() {
+        guard acceptsInput else { return }
         analytics.matchReset()
         match.reset()
     }
