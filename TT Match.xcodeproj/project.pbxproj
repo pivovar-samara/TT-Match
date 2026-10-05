@@ -389,7 +389,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${BUILD_DIR%Build/*}SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\" --app-id \"${FIREBASE_GOOGLE_APP_ID}\"\n";
+			shellScript = "# Firebase keys come from Config/Secrets.xcconfig; without them Firebase is skipped, so skip the upload too.\nif [ -z \"${FIREBASE_GOOGLE_APP_ID}\" ]; then\n  echo \"FIREBASE_GOOGLE_APP_ID is not set, skipping Crashlytics dSYM upload\"\n  exit 0\nfi\n\"${BUILD_DIR%Build/*}SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\" --app-id \"${FIREBASE_GOOGLE_APP_ID}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
