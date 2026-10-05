@@ -71,7 +71,7 @@ struct MatchScreen: View {
             match: viewModel.match,
             player: player,
             side: side,
-            pointAnimationTrigger: viewModel.pointAnimations[player, default: 0],
+            pointAnimationTrigger: side == .left ? viewModel.leftPointAnimations : viewModel.rightPointAnimations,
             onTap: { viewModel.tap(player) },
             onUndo: viewModel.undo)
     }
@@ -150,9 +150,9 @@ struct MatchScreen: View {
         guard volumeHandler == nil else { return }
         let viewModel = self.viewModel
         let handler = TTMVolumeButtonHandler(up: {
-            viewModel.hardwareTap(viewModel.rightPlayer)
+            viewModel.tap(viewModel.rightPlayer)
         }, downBlock: {
-            viewModel.hardwareTap(viewModel.leftPlayer)
+            viewModel.tap(viewModel.leftPlayer)
         })
         handler.start(true)
         volumeHandler = handler

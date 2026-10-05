@@ -26,8 +26,11 @@ final class MatchViewModel {
     /// True for `secondsToDeclineTaps` after each point or undo; the UI ignores input meanwhile.
     private(set) var isInputLocked = false
 
-    /// How many points each player has scored with an animation. The UI animates a player's button when it changes.
-    private(set) var pointAnimations: [TTMMatchPlayer: Int] = [:]
+    /// How many animated points were scored on the left and on the right button. The UI animates a button
+    /// when its counter changes. Counted per side, not per player: players switch sides between games and
+    /// in the deciding game, and the animation belongs to the side where the scorer is after the point.
+    private(set) var leftPointAnimations = 0
+    private(set) var rightPointAnimations = 0
 
     @ObservationIgnored private let analytics: TTMAnalyticsTracking
     /// Runs a closure after a number of seconds. Tests replace it to control when the input lock ends.
@@ -76,9 +79,12 @@ final class MatchViewModel {
 
     // MARK: - Intents
 
-    /// A tap on a player's score. Returns true when the point should be animated on that player's button.
+    /// A tap on a player's score (touch, accessibility action or hardware volume button).
+    /// Ignored while input is locked. Returns true when the point should be animated on that player's button.
     @discardableResult
     func tap(_ player: TTMMatchPlayer) -> Bool {
+        guard !isInputLocked else { return false }
+
         let hasServe = match.serve != nil
         let gameFinished = match.gameFinished
         let matchFinished = match.matchFinished
@@ -105,17 +111,13 @@ final class MatchViewModel {
         lockInput()
         let animated = hasServe && !gameFinished && !matchFinished && !gameFinishedAfter && !matchFinishedAfter
         if animated {
-            pointAnimations[player, default: 0] += 1
+            if match.players[0] == player {
+                leftPointAnimations += 1
+            } else {
+                rightPointAnimations += 1
+            }
         }
         return animated
-    }
-
-    /// A press of a hardware volume button. Ignored while input is locked.
-    /// Returns true when the point should be animated, as `tap(_:)`.
-    @discardableResult
-    func hardwareTap(_ player: TTMMatchPlayer) -> Bool {
-        guard !isInputLocked else { return false }
-        return tap(player)
     }
 
     /// A tap outside the score buttons starts the next game (or match) once one is finished.
@@ -124,7 +126,9 @@ final class MatchViewModel {
         tap(match.players[0])
     }
 
+    /// Ignored while input is locked.
     func undo() {
+        guard !isInputLocked else { return }
         if match.firstServe != nil {
             analytics.undoUsed()
         }

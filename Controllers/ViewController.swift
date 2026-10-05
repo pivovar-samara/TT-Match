@@ -40,10 +40,10 @@ class ViewController: UIViewController {
         
         self.volumeHandler = TTMVolumeButtonHandler(up: { [weak self] in
             guard let strongSelf = self else { return }
-            strongSelf.hardwareTap(strongSelf.viewModel.rightPlayer)
+            strongSelf.tap(strongSelf.viewModel.rightPlayer)
         }, downBlock: { [weak self] in
             guard let strongSelf = self else { return }
-            strongSelf.hardwareTap(strongSelf.viewModel.leftPlayer)
+            strongSelf.tap(strongSelf.viewModel.leftPlayer)
         })
         self.volumeHandler?.start(true)
         
@@ -233,11 +233,6 @@ class ViewController: UIViewController {
     
     fileprivate func tap(_ player: TTMMatchPlayer) {
         let animated = self.viewModel.tap(player)
-        self.updateUI(animatedPlayer: animated ? player : nil)
-    }
-    
-    fileprivate func hardwareTap(_ player: TTMMatchPlayer) {
-        let animated = self.viewModel.hardwareTap(player)
         self.updateUI(animatedPlayer: animated ? player : nil)
     }
     
