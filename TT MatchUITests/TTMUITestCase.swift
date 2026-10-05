@@ -7,7 +7,9 @@ import XCTest
 
 /// A match to start the app with, in the format `TTMMatch.save()` writes.
 /// Scores are `[green, blue]` per game. The left player is green when the number of games is odd
-/// and blue when it is even (sides switch every game).
+/// and blue when it is even (sides switch every game). Exception: in the deciding game
+/// (`games.count == gameCount`) sides switch again once the leader reaches `pointCount / 2`,
+/// so there green is on the right (see `TTMMatch.players`).
 struct MatchSeed {
     var games: [[Int]]
     var firstServe: Int = 1     // 1 = green, 2 = blue (TTMMatchPlayer raw values)
