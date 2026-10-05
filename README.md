@@ -35,26 +35,27 @@ An iOS app for tracking table tennis match scores. Built for quick, hands-free s
 
 ## Architecture
 
-Standard MVC pattern with UIKit. Pure Swift — no Objective-C.
+SwiftUI with an `@Observable` view model (`MatchViewModel`). Pure Swift — no Objective-C.
 
 ```
 TT Match/
-├── AppDelegate.swift               # App entry point; configures Firebase
-├── SceneDelegate.swift
+├── TTMatchApp.swift                # App entry point (SwiftUI App)
+├── AppDelegate.swift               # Launch setup: Firebase, UI test mode
 ├── Config/
 │   ├── Base.xcconfig               # Committed build config; optionally includes Secrets.xcconfig
 │   └── Secrets.xcconfig.example    # Template for Firebase keys (Secrets.xcconfig is git-ignored)
 ├── ci_scripts/
 │   └── ci_pre_xcodebuild.sh        # Xcode Cloud: generates Secrets.xcconfig from env vars
 ├── Controllers/
-│   └── ViewController.swift        # Main UI; handles all user input
+│   └── MatchViewModel.swift        # Screen logic: intents, tap lockout, analytics, UI state
 ├── Entities/
 │   ├── TTMMatch.swift              # Core game state and logic (singleton)
 │   └── TTMMatchSettings.swift      # Match configuration struct
 ├── Views/
-│   ├── TTMSelectableButton         # Score button with embedded undo control
-│   ├── TTMGameCell                 # Table cell showing completed game scores
-│   └── TTMTextField                # Text field used for keyboard management
+│   ├── MatchScreen.swift           # The match screen, dialogs, volume buttons
+│   ├── ScoreButton.swift           # Score button with undo control
+│   ├── GamesStrip.swift            # Scores of completed games
+│   └── RandomServeButton.swift     # Random first server picker
 ├── Helpers/
 │   ├── TTMAnalytics.swift          # Firebase Analytics event wrappers
 │   ├── TTMConfig.swift             # Global constants
@@ -63,11 +64,11 @@ TT Match/
 │   ├── TTMSoundManager.swift       # AVAudioPlayer-based sound playback (singleton)
 │   └── TTMVolumeButtonHandler.swift # Volume button interception; suppresses system HUD
 ├── Extensions/
-│   ├── UIColorExtensions.swift     # App color palette
-│   ├── UIFontExtensions.swift      # Adaptive font weights
-│   └── UIImageExtensions.swift     # Image-from-color, tinting
+│   ├── ColorExtensions.swift       # SwiftUI app colors
+│   ├── FontExtensions.swift        # SwiftUI app fonts
+│   ├── UIColorExtensions.swift     # App color palette (UIKit)
+│   └── UIFontExtensions.swift      # Font used to size the score
 └── Resources/
-    ├── Main.storyboard
     ├── Localizable.xcstrings       # String catalog (EN + RU)
     └── Assets.xcassets
 ```
@@ -76,7 +77,7 @@ TT Match/
 - `TTMMatch` is a singleton persisted to `UserDefaults` under the key `"TTMMatch"`
 - Volume button interception uses KVO on `AVAudioSession.outputVolume`; a hidden `MPVolumeView` in the key window suppresses the system HUD; volume is silently restored to the pre-press level after each detected press so the system volume never visibly changes
 - App sounds play via `AVAudioPlayer` on the same `.playback` session, so they automatically respect the media volume the user has set
-- Font size in score buttons is computed via binary search to fill available width
+- Font size in score buttons is computed so "00" fills the available width
 
 ---
 

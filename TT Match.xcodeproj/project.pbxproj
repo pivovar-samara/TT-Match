@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0513B2BBB4FBE12C18D96CFF /* TTMatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3BD653B3822F6783C95820 /* TTMatchApp.swift */; };
 		D4F24A63DF3B170A81D8142F /* FontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303F3C25958B178E248487C3 /* FontExtensions.swift */; };
 		47FDABED9355B6C8F62DE9A2 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FAB8B65AF7B54136AD5CE5 /* ColorExtensions.swift */; };
 		1BF2A4C6D7FCC7BC7811ED77 /* MatchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D9303606F491389B58735A /* MatchScreen.swift */; };
@@ -20,24 +21,16 @@
 		485D8D532F8262F1009BCBE7 /* TTMMatchSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8D522F8262F1009BCBE7 /* TTMMatchSettings.swift */; };
 		485D8D542F8262F1009BCBE7 /* TTMMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8D512F8262F1009BCBE7 /* TTMMatch.swift */; };
 		485D8D612F8263C8009BCBE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 485D8D5B2F8263C8009BCBE7 /* Assets.xcassets */; };
-		485D8D622F8263C8009BCBE7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 485D8D5E2F8263C8009BCBE7 /* Main.storyboard */; };
 		485D8D632F8263C8009BCBE7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 485D8D5D2F8263C8009BCBE7 /* LaunchScreen.storyboard */; };
 		485D8D6D2F82642F009BCBE7 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 485D8D6C2F82642F009BCBE7 /* Localizable.xcstrings */; };
 		485D8D6F2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8D6E2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift */; };
-		485D8DF02F9A0001009BCBE7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485D8DF12F9A0001009BCBE7 /* SceneDelegate.swift */; };
 		48A1C0022F90000100A1B2C3 /* MatchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A1C0012F90000100A1B2C3 /* MatchViewModel.swift */; };
 		A02630A31CDA0D0B00F60C18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */; };
-		A02630A51CDA0D0B00F60C18 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630A41CDA0D0B00F60C18 /* ViewController.swift */; };
-		A02630B51CDA108C00F60C18 /* TTMSelectableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630B41CDA108C00F60C18 /* TTMSelectableButton.swift */; };
-		A02630B71CDA118900F60C18 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630B61CDA118900F60C18 /* UIImageExtensions.swift */; };
 		A02630BB1CDA20EE00F60C18 /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630BA1CDA20EE00F60C18 /* UIColorExtensions.swift */; };
 		A02630BD1CDA35B900F60C18 /* TTMHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630BC1CDA35B900F60C18 /* TTMHelper.swift */; };
 		A02630C01CDA363D00F60C18 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630BF1CDA363D00F60C18 /* UIFontExtensions.swift */; };
 		A02630D21CDB79F500F60C18 /* TTMSoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630D11CDB79F500F60C18 /* TTMSoundManager.swift */; };
 		A02630D41CDB8E6600F60C18 /* TTMConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02630D31CDB8E6600F60C18 /* TTMConfig.swift */; };
-		A0B663A11D4BCE570042E3F0 /* TTMSelectableButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0B663A01D4BCE570042E3F0 /* TTMSelectableButton.xib */; };
-		A0B663A61D4BDE790042E3F0 /* TTMGameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B663A41D4BDE790042E3F0 /* TTMGameCell.swift */; };
-		A0B663A71D4BDE790042E3F0 /* TTMGameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0B663A51D4BDE790042E3F0 /* TTMGameCell.xib */; };
 		C1A0F00D0000000000000001 /* TTMUITestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0F00D0000000000000002 /* TTMUITestSupport.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +52,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4F3BD653B3822F6783C95820 /* TTMatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTMatchApp.swift; sourceTree = "<group>"; };
 		303F3C25958B178E248487C3 /* FontExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtensions.swift; sourceTree = "<group>"; };
 		63FAB8B65AF7B54136AD5CE5 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		20D9303606F491389B58735A /* MatchScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchScreen.swift; sourceTree = "<group>"; };
@@ -75,10 +69,8 @@
 		485D8D5B2F8263C8009BCBE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		485D8D5C2F8263C8009BCBE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		485D8D5D2F8263C8009BCBE7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		485D8D5E2F8263C8009BCBE7 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		485D8D6C2F82642F009BCBE7 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		485D8D6E2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTMVolumeButtonHandler.swift; sourceTree = "<group>"; };
-		485D8DF12F9A0001009BCBE7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		485F29493072C19300546523 /* TT MatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TT MatchTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		485F29563072C1A900546523 /* TT MatchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TT MatchUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		485F29873072CA5800546523 /* CITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CITests.xctestplan; sourceTree = "<group>"; };
@@ -86,17 +78,11 @@
 		48A1C0012F90000100A1B2C3 /* MatchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchViewModel.swift; sourceTree = "<group>"; };
 		A026309F1CDA0D0A00F60C18 /* TT Match.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TT Match.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A02630A41CDA0D0B00F60C18 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		A02630B41CDA108C00F60C18 /* TTMSelectableButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMSelectableButton.swift; sourceTree = "<group>"; };
-		A02630B61CDA118900F60C18 /* UIImageExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		A02630BA1CDA20EE00F60C18 /* UIColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
 		A02630BC1CDA35B900F60C18 /* TTMHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMHelper.swift; sourceTree = "<group>"; };
 		A02630BF1CDA363D00F60C18 /* UIFontExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExtensions.swift; sourceTree = "<group>"; };
 		A02630D11CDB79F500F60C18 /* TTMSoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMSoundManager.swift; sourceTree = "<group>"; };
 		A02630D31CDB8E6600F60C18 /* TTMConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMConfig.swift; sourceTree = "<group>"; };
-		A0B663A01D4BCE570042E3F0 /* TTMSelectableButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TTMSelectableButton.xib; sourceTree = "<group>"; };
-		A0B663A41D4BDE790042E3F0 /* TTMGameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTMGameCell.swift; sourceTree = "<group>"; };
-		A0B663A51D4BDE790042E3F0 /* TTMGameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TTMGameCell.xib; sourceTree = "<group>"; };
 		C1A0F00D0000000000000002 /* TTMUITestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTMUITestSupport.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -169,10 +155,6 @@
 				A1CFA593B0B6163DF4320C55 /* RandomServeButton.swift */,
 				DFE68AF892C2BD5A865E8802 /* GamesStrip.swift */,
 				A7565974AFF6F77DAAB79009 /* ScoreButton.swift */,
-				A02630B41CDA108C00F60C18 /* TTMSelectableButton.swift */,
-				A0B663A01D4BCE570042E3F0 /* TTMSelectableButton.xib */,
-				A0B663A41D4BDE790042E3F0 /* TTMGameCell.swift */,
-				A0B663A51D4BDE790042E3F0 /* TTMGameCell.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -180,7 +162,6 @@
 		485D8D582F826345009BCBE7 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				A02630A41CDA0D0B00F60C18 /* ViewController.swift */,
 				48A1C0012F90000100A1B2C3 /* MatchViewModel.swift */,
 			);
 			path = Controllers;
@@ -191,7 +172,6 @@
 			children = (
 				303F3C25958B178E248487C3 /* FontExtensions.swift */,
 				63FAB8B65AF7B54136AD5CE5 /* ColorExtensions.swift */,
-				A02630B61CDA118900F60C18 /* UIImageExtensions.swift */,
 				A02630BA1CDA20EE00F60C18 /* UIColorExtensions.swift */,
 				A02630BF1CDA363D00F60C18 /* UIFontExtensions.swift */,
 			);
@@ -205,7 +185,6 @@
 				485D8D5C2F8263C8009BCBE7 /* Info.plist */,
 				4831DDFD2F841F4700010D5F /* AppIcon.icon */,
 				485D8D5D2F8263C8009BCBE7 /* LaunchScreen.storyboard */,
-				485D8D5E2F8263C8009BCBE7 /* Main.storyboard */,
 				485D8D6C2F82642F009BCBE7 /* Localizable.xcstrings */,
 			);
 			path = Resources;
@@ -218,8 +197,8 @@
 				485F29873072CA5800546523 /* CITests.xctestplan */,
 				485D8D4F2F8251CA009BCBE7 /* CLAUDE.md */,
 				485D8D502F8251CA009BCBE7 /* README.md */,
+				4F3BD653B3822F6783C95820 /* TTMatchApp.swift */,
 				A02630A21CDA0D0B00F60C18 /* AppDelegate.swift */,
-				485D8DF12F9A0001009BCBE7 /* SceneDelegate.swift */,
 				485D8D552F826303009BCBE7 /* Entities */,
 				485D8D582F826345009BCBE7 /* Controllers */,
 				485D8D572F82633C009BCBE7 /* Views */,
@@ -378,13 +357,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A0B663A11D4BCE570042E3F0 /* TTMSelectableButton.xib in Resources */,
 				485D8D612F8263C8009BCBE7 /* Assets.xcassets in Resources */,
 				485D8D6D2F82642F009BCBE7 /* Localizable.xcstrings in Resources */,
 				4831DDFE2F841F4700010D5F /* AppIcon.icon in Resources */,
-				485D8D622F8263C8009BCBE7 /* Main.storyboard in Resources */,
 				485D8D632F8263C8009BCBE7 /* LaunchScreen.storyboard in Resources */,
-				A0B663A71D4BDE790042E3F0 /* TTMGameCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,8 +414,6 @@
 				485D8D6F2F82700F009BCBE7 /* TTMVolumeButtonHandler.swift in Sources */,
 				485D8D532F8262F1009BCBE7 /* TTMMatchSettings.swift in Sources */,
 				485D8D542F8262F1009BCBE7 /* TTMMatch.swift in Sources */,
-				A0B663A61D4BDE790042E3F0 /* TTMGameCell.swift in Sources */,
-				A02630A51CDA0D0B00F60C18 /* ViewController.swift in Sources */,
 				D4F24A63DF3B170A81D8142F /* FontExtensions.swift in Sources */,
 				47FDABED9355B6C8F62DE9A2 /* ColorExtensions.swift in Sources */,
 				1BF2A4C6D7FCC7BC7811ED77 /* MatchScreen.swift in Sources */,
@@ -450,12 +424,10 @@
 				A02630D41CDB8E6600F60C18 /* TTMConfig.swift in Sources */,
 				C1A0F00D0000000000000001 /* TTMUITestSupport.swift in Sources */,
 				A02630A31CDA0D0B00F60C18 /* AppDelegate.swift in Sources */,
-				485D8DF02F9A0001009BCBE7 /* SceneDelegate.swift in Sources */,
+				0513B2BBB4FBE12C18D96CFF /* TTMatchApp.swift in Sources */,
 				A02630BD1CDA35B900F60C18 /* TTMHelper.swift in Sources */,
 				A02630BB1CDA20EE00F60C18 /* UIColorExtensions.swift in Sources */,
-				A02630B51CDA108C00F60C18 /* TTMSelectableButton.swift in Sources */,
 				A02630C01CDA363D00F60C18 /* UIFontExtensions.swift in Sources */,
-				A02630B71CDA118900F60C18 /* UIImageExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
