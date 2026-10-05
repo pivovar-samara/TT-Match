@@ -15,6 +15,12 @@ enum TTMSettingsMode: Equatable {
     case hidden
 }
 
+/// A dialog opened from the settings button.
+enum TTMSettingsDialog: Equatable {
+    case gameCount
+    case reset
+}
+
 /// Screen logic for the match: user intents, analytics, tap lockout and the state the UI shows.
 /// The UI only calls intents and renders the properties below.
 @MainActor
@@ -31,6 +37,10 @@ final class MatchViewModel {
 
     /// False while input is locked or the serve is being randomized; the UI ignores touches meanwhile.
     var acceptsInput: Bool { !isInputLocked && !isRandomizingServe }
+
+    /// The settings dialog on screen. Scoring and undo are ignored while one is open, so a volume button
+    /// press cannot lock input and swallow the choice made in the dialog. The UI sets it back to nil on dismissal.
+    var presentedDialog: TTMSettingsDialog?
 
     /// How many animated points were scored on the left and on the right button. The UI animates a button
     /// when its counter changes. Counted per side, not per player: players switch sides between games and
@@ -90,7 +100,7 @@ final class MatchViewModel {
     /// Returns true when the point should be animated on that player's button.
     @discardableResult
     func tap(_ player: TTMMatchPlayer) -> Bool {
-        guard acceptsInput else { return false }
+        guard acceptsInput, presentedDialog == nil else { return false }
 
         let hasServe = match.serve != nil
         let gameFinished = match.gameFinished
@@ -135,7 +145,7 @@ final class MatchViewModel {
 
     /// Ignored while input is locked or the serve is being randomized.
     func undo() {
-        guard acceptsInput else { return }
+        guard acceptsInput, presentedDialog == nil else { return }
         if match.firstServe != nil {
             analytics.undoUsed()
         }
@@ -172,6 +182,20 @@ final class MatchViewModel {
     /// Call when the randomization animation is over: input is accepted again.
     func finishServeRandomization() {
         isRandomizingServe = false
+    }
+
+    /// Opens the dialog the settings button offers in the current state.
+    /// Ignored while input is locked or the serve is being randomized.
+    func showSettings() {
+        guard acceptsInput else { return }
+        switch settingsMode {
+        case .gameCount:
+            presentedDialog = .gameCount
+        case .reset:
+            presentedDialog = .reset
+        case .hidden:
+            break
+        }
     }
 
     /// Ignored while input is locked or the serve is being randomized.

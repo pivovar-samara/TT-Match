@@ -10,8 +10,6 @@ struct MatchScreen: View {
 
     @State private var viewModel: MatchViewModel
     @State private var volumeHandler: TTMVolumeButtonHandler?
-    @State private var showsGameCountDialog = false
-    @State private var showsResetDialog = false
 
     /// `viewModel` defaults to one for `TTMMatch.currentMatch`.
     @MainActor
@@ -91,15 +89,7 @@ struct MatchScreen: View {
             Color.clear
                 .frame(width: 48.0, height: 48.0)
         } else {
-            Button {
-                // Touches are blocked by allowsHitTesting, VoiceOver activation is not.
-                guard viewModel.acceptsInput else { return }
-                if mode == .reset {
-                    showsResetDialog = true
-                } else {
-                    showsGameCountDialog = true
-                }
-            } label: {
+            Button(action: viewModel.showSettings) {
                 settingsLabel(mode)
                     .frame(width: 48.0, height: 48.0)
                     .background(Circle().fill(settingsBackground(mode)))
@@ -109,13 +99,13 @@ struct MatchScreen: View {
             .accessibilityLabel(L(mode == .reset ? "Accessibility_ResetMatch" : "Accessibility_MatchLength"))
             .accessibilityValue(settingsAccessibilityValue(mode))
             .accessibilityIdentifier("settings")
-            .confirmationDialog(Text(verbatim: ""), isPresented: $showsGameCountDialog, titleVisibility: .hidden) {
+            .confirmationDialog(Text(verbatim: ""), isPresented: isPresenting(.gameCount), titleVisibility: .hidden) {
                 Button(L("MatchSettings_3games")) { viewModel.setGameCount(3) }
                 Button(L("MatchSettings_5games")) { viewModel.setGameCount(5) }
                 Button(L("MatchSettings_7games")) { viewModel.setGameCount(7) }
                 Button(L("Cancel"), role: .cancel) {}
             }
-            .confirmationDialog(L("Shake_ActionSheet_Title"), isPresented: $showsResetDialog, titleVisibility: .visible) {
+            .confirmationDialog(L("Shake_ActionSheet_Title"), isPresented: isPresenting(.reset), titleVisibility: .visible) {
                 Button(L("Shake_ActionSheet_Confirm"), role: .destructive, action: viewModel.resetMatch)
                 Button(L("Cancel"), role: .cancel) {}
             }
@@ -134,6 +124,16 @@ struct MatchScreen: View {
                 .renderingMode(.template)
                 .foregroundStyle(viewModel.gameWinner != nil ? Color.white.opacity(0.5) : Color.ttmGray)
         }
+    }
+
+    private func isPresenting(_ dialog: TTMSettingsDialog) -> Binding<Bool> {
+        Binding(
+            get: { viewModel.presentedDialog == dialog },
+            set: { isPresented in
+                if !isPresented && viewModel.presentedDialog == dialog {
+                    viewModel.presentedDialog = nil
+                }
+            })
     }
 
     /// The game count while it can be chosen.

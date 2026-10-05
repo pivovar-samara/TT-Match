@@ -275,12 +275,38 @@ struct MatchViewModelTests {
         #expect(analytics.events == ["settings_changed:5"])
     }
 
+    @Test func settingsOpenDialogForCurrentMode() {
+        viewModel.showSettings()
+        #expect(viewModel.presentedDialog == .gameCount)
+
+        viewModel.presentedDialog = nil
+        match.start()
+        viewModel.showSettings()
+        #expect(viewModel.presentedDialog == .reset)
+    }
+
+    @Test func scoringAndUndoAreIgnoredWhileDialogIsOpen() {
+        match.start()
+        viewModel.showSettings()
+
+        #expect(!viewModel.tap(.blue))
+        viewModel.undo()
+        #expect(match.blueScore == 0)
+        #expect(match.firstServe == .green)
+        #expect(!viewModel.isInputLocked)
+
+        viewModel.resetMatch()
+        #expect(match.firstServe == nil)
+    }
+
     @Test func settingsAreIgnoredWhileInputIsLocked() {
         viewModel.tap(.green)
 
+        viewModel.showSettings()
         viewModel.setGameCount(5)
         viewModel.resetMatch()
 
+        #expect(viewModel.presentedDialog == nil)
         #expect(match.settings.gameCount == 3)
         #expect(match.firstServe == .green)
         #expect(analytics.events == ["match_started:3"])
