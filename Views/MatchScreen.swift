@@ -63,9 +63,13 @@ struct MatchScreen: View {
     /// The layout around a vertical fold (iPhone Duo inner display in landscape), nil without one.
     /// Inactive folds count too (the display is flat), so the layout does not jump while folding.
     private static func foldLayout(_ proxy: GeometryProxy) -> TTMFoldLayout? {
+        #if canImport(SwiftUICore, _version: 8.0.85) // The iOS 27.1 SDK (Xcode 27.1)
         guard #available(iOS 27.1, *) else { return nil }
         let folds = proxy.reservedRegions(kind: .division, options: .includeInactive).map(\.frame)
         return folds.lazy.compactMap { TTMFoldLayout(containerWidth: proxy.size.width, fold: $0) }.first
+        #else
+        return nil
+        #endif
     }
 
     @ViewBuilder
@@ -132,8 +136,12 @@ struct MatchScreen: View {
 
     /// The active horizontal fold (iPhone Duo standing half open in portrait), nil without one.
     private static func horizontalFold(_ proxy: GeometryProxy) -> CGRect? {
+        #if canImport(SwiftUICore, _version: 8.0.85) // The iOS 27.1 SDK (Xcode 27.1)
         guard #available(iOS 27.1, *) else { return nil }
         return proxy.reservedRegions(kind: .division).map(\.frame).first { $0.width > $0.height }
+        #else
+        return nil
+        #endif
     }
 
     /// The upper half faces the players: a scoreboard to read from a distance. The lower half lies on the
@@ -293,6 +301,7 @@ private struct HingeReader: ViewModifier {
     @Binding var isPartiallyOpen: Bool
 
     func body(content: Content) -> some View {
+        #if canImport(SwiftUICore, _version: 8.0.85) // The iOS 27.1 SDK (Xcode 27.1)
         if #available(iOS 27.1, *) {
             content.onHingeChange { _, context in
                 isPartiallyOpen = context.hinge?.status == .partiallyOpen
@@ -300,6 +309,9 @@ private struct HingeReader: ViewModifier {
         } else {
             content
         }
+        #else
+        content
+        #endif
     }
 }
 
