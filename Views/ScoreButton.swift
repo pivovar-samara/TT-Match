@@ -73,7 +73,7 @@ struct ScoreButton: View {
         .onLongPressGesture(minimumDuration: 0.5, perform: onUndo, onPressingChanged: { isPressed = $0 })
         .accessibilityElement(children: .ignore)
         .accessibilityAddTraits(.isButton)
-        .accessibilityLabel(Text(String(score)))
+        .accessibilityLabel(L(player == .green ? "Accessibility_Player_Green" : "Accessibility_Player_Blue"))
         .accessibilityValue(String(score))
         .accessibilityIdentifier(side == .left ? "score.left" : "score.right")
         .accessibilityAction { onTap() }
@@ -92,6 +92,7 @@ struct ScoreButton: View {
                 .contentShape(Circle())
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(L("Accessibility_Undo"))
         .accessibilityIdentifier(side == .left ? "undo.left" : "undo.right")
     }
 
