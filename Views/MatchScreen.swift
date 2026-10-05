@@ -104,6 +104,8 @@ struct MatchScreen: View {
                     .contentShape(Circle())
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(L(mode == .reset ? "Accessibility_ResetMatch" : "Accessibility_MatchLength"))
+            .accessibilityValue(settingsAccessibilityValue(mode))
             .accessibilityIdentifier("settings")
             .confirmationDialog(Text(verbatim: ""), isPresented: $showsGameCountDialog, titleVisibility: .hidden) {
                 Button(L("MatchSettings_3games")) { viewModel.setGameCount(3) }
@@ -130,6 +132,14 @@ struct MatchScreen: View {
                 .renderingMode(.template)
                 .foregroundStyle(viewModel.gameWinner != nil ? Color.white.opacity(0.5) : Color.ttmGray)
         }
+    }
+
+    /// The game count while it can be chosen.
+    private func settingsAccessibilityValue(_ mode: TTMSettingsMode) -> String {
+        if case .gameCount(let gameCount) = mode {
+            return String(gameCount)
+        }
+        return ""
     }
 
     private func settingsBackground(_ mode: TTMSettingsMode) -> Color {

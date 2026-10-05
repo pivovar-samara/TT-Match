@@ -39,6 +39,7 @@ struct RandomServeButton: View {
             .scaleEffect(scale)
             .rotationEffect(rotation)
             .opacity(opacity)
+            .accessibilityLabel(L("Accessibility_RandomServe"))
             .accessibilityIdentifier("randomServe")
         }
     }

@@ -12,7 +12,7 @@ final class MatchFlowUITests: TTMUITestCase {
 
         assertScore(left: 0, right: 0)
         XCTAssertTrue(randomServe.exists)
-        XCTAssertEqual(settings.label, "7")
+        assertValue(settings, "7")
     }
 
     func testFirstTapStartsMatchThenScores() {

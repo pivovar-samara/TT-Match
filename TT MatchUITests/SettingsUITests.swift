@@ -9,7 +9,7 @@ final class SettingsUITests: TTMUITestCase {
 
     func testChangeGameCountBeforeMatch() {
         launch()
-        XCTAssertEqual(settings.label, "7")
+        assertValue(settings, "7")
 
         settings.tap()
         let threeGames = app.buttons["3 games, till 2 wins"]
@@ -19,7 +19,7 @@ final class SettingsUITests: TTMUITestCase {
         threeGames.tap()
 
         XCTAssertTrue(threeGames.waitForNonExistence(timeout: 3))
-        XCTAssertEqual(settings.label, "3")
+        assertValue(settings, "3")
     }
 
     func testResetMatchConfirmed() {
