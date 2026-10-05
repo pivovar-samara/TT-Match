@@ -20,6 +20,8 @@ struct ScoreButton: View {
     let pointAnimationTrigger: Int
     let onTap: () -> Void
     let onUndo: () -> Void
+    /// False for a display-only copy (the stand mode scoreboard): no gestures, no undo, hidden from accessibility.
+    var isInteractive = true
 
     @State private var isPressed = false
 
@@ -27,8 +29,13 @@ struct ScoreButton: View {
 
     var body: some View {
         ZStack(alignment: side == .left ? .bottomLeading : .bottomTrailing) {
-            scoreArea
-            if hasServe {
+            if isInteractive {
+                scoreArea
+            } else {
+                scoreFace
+                    .accessibilityHidden(true)
+            }
+            if isInteractive && hasServe {
                 undoButton
                     .padding(16)
                     .transition(.opacity)
@@ -39,11 +46,25 @@ struct ScoreButton: View {
     // MARK: - Score area
 
     private var scoreArea: some View {
+        scoreFace
+            .contentShape(RoundedRectangle(cornerRadius: cornerRadius))
+            .onTapGesture(perform: onTap)
+            .onLongPressGesture(minimumDuration: 0.5, perform: onUndo, onPressingChanged: { isPressed = $0 })
+            .accessibilityElement(children: .ignore)
+            .accessibilityAddTraits(.isButton)
+            .accessibilityLabel(L(player == .green ? "Accessibility_Player_Green" : "Accessibility_Player_Blue"))
+            .accessibilityValue(String(score))
+            .accessibilityIdentifier(side == .left ? "score.left" : "score.right")
+            .accessibilityAction { onTap() }
+    }
+
+    /// The score, games score and serve state, without interaction.
+    private var scoreFace: some View {
         let shape = RoundedRectangle(cornerRadius: cornerRadius)
         return GeometryReader { proxy in
             ZStack(alignment: .bottom) {
                 Text(String(score))
-                    .font(.ttmBold(Self.scoreFontSize(forWidth: proxy.size.width - 32.0)))
+                    .font(.ttmBold(Self.scoreFontSize(for: proxy.size)))
                     .monospacedDigit()
                     .lineLimit(1)
                     .contentTransition(.numericText(value: Double(score)))
@@ -68,15 +89,6 @@ struct ScoreButton: View {
             CubicKeyframe(0.85, duration: secondsToDeclineTaps / 2.0)
             SpringKeyframe(1.0, duration: secondsToDeclineTaps / 2.0)
         }
-        .contentShape(shape)
-        .onTapGesture(perform: onTap)
-        .onLongPressGesture(minimumDuration: 0.5, perform: onUndo, onPressingChanged: { isPressed = $0 })
-        .accessibilityElement(children: .ignore)
-        .accessibilityAddTraits(.isButton)
-        .accessibilityLabel(L(player == .green ? "Accessibility_Player_Green" : "Accessibility_Player_Blue"))
-        .accessibilityValue(String(score))
-        .accessibilityIdentifier(side == .left ? "score.left" : "score.right")
-        .accessibilityAction { onTap() }
     }
 
     // MARK: - Undo
@@ -119,11 +131,17 @@ struct ScoreButton: View {
         return isFilled ? .white : player.swiftUIColor
     }
 
-    /// The largest font that fits "00" into `width`.
-    static func scoreFontSize(forWidth width: CGFloat) -> CGFloat {
+    /// Room for the games score at the bottom of the button (label height and padding).
+    private static let gamesScoreHeight: CGFloat = 48.0 + 14.0
+
+    /// The largest font for a score button of `size`: "00" fits the width (with 16 pt margins), and the
+    /// centered line leaves room for the games score below it.
+    static func scoreFontSize(for size: CGSize) -> CGFloat {
         let referenceSize: CGFloat = 100.0
-        let referenceWidth = ("00" as NSString).size(withAttributes: [.font: UIFont.ttmFontBoldOfSize(referenceSize)]).width
-        let maxSize: CGFloat = IS_IPAD ? 384.0 : 192.0
-        return max(1.0, min(maxSize, floor(referenceSize * width / referenceWidth)))
+        let referenceFont = UIFont.ttmFontBoldOfSize(referenceSize)
+        let referenceWidth = ("00" as NSString).size(withAttributes: [.font: referenceFont]).width
+        let widthLimit = referenceSize * (size.width - 32.0) / referenceWidth
+        let heightLimit = referenceSize * (size.height - 2.0 * gamesScoreHeight) / referenceFont.lineHeight
+        return max(1.0, floor(min(widthLimit, heightLimit)))
     }
 }
