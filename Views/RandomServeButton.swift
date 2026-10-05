@@ -24,7 +24,7 @@ struct RandomServeButton: View {
     var body: some View {
         ZStack {
             Circle()
-                .fill(.white)
+                .fill(Color.ttmBackground)
                 .frame(width: 140.0, height: 140.0)
                 .opacity(isExploding ? 0.0 : 1.0)
 
@@ -33,7 +33,9 @@ struct RandomServeButton: View {
                     .renderingMode(.template)
                     .foregroundStyle(Color.ttmGray)
                     .frame(width: 128.0, height: 128.0)
-                    .background(Circle().fill(Color(uiColor: UIColor.ttmGrayColor.opaqueColor(0.2))))
+                    .ttmCircleBackground(Color.ttmGray.opacity(0.2))
+                    // Opaque underlay, so the score button borders do not show through.
+                    .background(Circle().fill(Color.ttmBackground))
             }
             .buttonStyle(.plain)
             .scaleEffect(scale)
