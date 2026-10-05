@@ -44,3 +44,23 @@ enum TTMAnalytics {
         Analytics.logEvent("settings_changed", parameters: ["game_count": gameCount])
     }
 }
+
+/// The analytics events `MatchViewModel` reports. Lets unit tests record events instead of sending them.
+protocol TTMAnalyticsTracking {
+    func matchStarted(gameCount: Int)
+    func matchReset()
+    func gameCompleted(gameNumber: Int)
+    func matchCompleted(gamesPlayed: Int)
+    func undoUsed()
+    func settingsChanged(gameCount: Int)
+}
+
+/// Forwards events to `TTMAnalytics`.
+struct TTMAnalyticsTracker: TTMAnalyticsTracking {
+    func matchStarted(gameCount: Int) { TTMAnalytics.matchStarted(gameCount: gameCount) }
+    func matchReset() { TTMAnalytics.matchReset() }
+    func gameCompleted(gameNumber: Int) { TTMAnalytics.gameCompleted(gameNumber: gameNumber) }
+    func matchCompleted(gamesPlayed: Int) { TTMAnalytics.matchCompleted(gamesPlayed: gamesPlayed) }
+    func undoUsed() { TTMAnalytics.undoUsed() }
+    func settingsChanged(gameCount: Int) { TTMAnalytics.settingsChanged(gameCount: gameCount) }
+}
