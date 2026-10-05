@@ -26,6 +26,9 @@ final class MatchViewModel {
     /// True for `secondsToDeclineTaps` after each point or undo; the UI ignores input meanwhile.
     private(set) var isInputLocked = false
 
+    /// How many points each player has scored with an animation. The UI animates a player's button when it changes.
+    private(set) var pointAnimations: [TTMMatchPlayer: Int] = [:]
+
     @ObservationIgnored private let analytics: TTMAnalyticsTracking
     @ObservationIgnored private var inputLockID = 0
 
@@ -95,7 +98,11 @@ final class MatchViewModel {
         }
 
         lockInput()
-        return hasServe && !gameFinished && !matchFinished && !gameFinishedAfter && !matchFinishedAfter
+        let animated = hasServe && !gameFinished && !matchFinished && !gameFinishedAfter && !matchFinishedAfter
+        if animated {
+            pointAnimations[player, default: 0] += 1
+        }
+        return animated
     }
 
     /// A press of a hardware volume button. Ignored while input is locked.

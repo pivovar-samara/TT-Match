@@ -41,7 +41,7 @@ class TTMUITestCase: XCTestCase {
     var randomServe: XCUIElement { app.buttons["randomServe"] }
 
     func game(_ index: Int) -> XCUIElement {
-        app.cells["game.\(index)"]
+        app.descendants(matching: .any).matching(identifier: "game.\(index)").firstMatch
     }
 
     override func setUp() {
@@ -59,13 +59,8 @@ class TTMUITestCase: XCTestCase {
         XCTAssertTrue(leftScore.waitForExistence(timeout: 5))
     }
 
-    /// The undo control is a subview of the score button, which hides it from the accessibility tree,
-    /// so it is tapped by position: a 48 pt button inset 16 pt from the bottom outer corner.
     func tapUndo(left: Bool) {
-        let score = left ? leftScore : rightScore
-        let origin = score.coordinate(withNormalizedOffset: CGVector(dx: left ? 0 : 1, dy: 1))
-        origin.withOffset(CGVector(dx: left ? 40 : -40, dy: -40)).tap()
-        Thread.sleep(forTimeInterval: tapLockout)
+        tapAndSettle(app.buttons[left ? "undo.left" : "undo.right"])
     }
 
     /// Dismisses the action sheet. On iPhone it may be shown as a popover without a Cancel button.

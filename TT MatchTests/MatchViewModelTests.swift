@@ -45,6 +45,7 @@ struct MatchViewModelTests {
         let animated = viewModel.tap(.green)
 
         #expect(!animated)
+        #expect(viewModel.pointAnimations.isEmpty)
         #expect(match.firstServe == .green)
         #expect(!viewModel.showsServeRandomizer)
         #expect(viewModel.showsGames)
@@ -57,6 +58,7 @@ struct MatchViewModelTests {
 
         #expect(viewModel.tap(.blue))
         #expect(match.blueScore == 1)
+        #expect(viewModel.pointAnimations == [.blue: 1])
     }
 
     @Test func tapLocksInputAndHardwareTapIsIgnoredMeanwhile() {

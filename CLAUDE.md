@@ -6,7 +6,7 @@ Guidance for Claude Code when working in this repository.
 
 ## Project at a glance
 
-- **Type**: iOS app (UIKit, MVC)
+- **Type**: iOS app — SwiftUI screen (`MatchScreen`) hosted in a UIKit scene, being migrated from UIKit/storyboard
 - **Language**: Pure Swift — no Objective-C
 - **Dependencies**: Firebase via Swift Package Manager (`FirebaseAnalytics`, `FirebaseCrashlytics`), added in the Xcode project — no Podfile, no Package.swift
 - **Tests**: `TT MatchTests` (Swift Testing, unit tests for `TTMMatch`/`TTMMatchSettings`) and `TT MatchUITests` (XCUITest). They are the safety net for the planned UIKit → SwiftUI migration — keep them passing and keep the accessibility identifiers they rely on
@@ -44,11 +44,12 @@ Guidance for Claude Code when working in this repository.
 | Game logic / serve rules | `Entities/TTMMatch.swift` |
 | Match configuration | `Entities/TTMMatchSettings.swift` |
 | Screen logic (intents, tap lockout, analytics, UI state) | `Controllers/MatchViewModel.swift` |
-| UI layout | `Resources/Main.storyboard` + `Controllers/ViewController.swift` |
-| Score button appearance | `Views/TTMSelectableButton.swift` |
-| Completed game row | `Views/TTMGameCell.swift` |
+| Screen layout, dialogs, volume buttons | `Views/MatchScreen.swift` (root view, created in `SceneDelegate`) |
+| Score button appearance | `Views/ScoreButton.swift` |
+| Completed game rows | `Views/GamesStrip.swift` |
+| Serve randomizer | `Views/RandomServeButton.swift` |
 | Audio | `Helpers/TTMSoundManager.swift` |
-| Colors / fonts / images | `Extensions/` |
+| Colors / fonts / images | `Extensions/` (`Color.ttm*`, `Font.ttm*` for SwiftUI) |
 | App-level config | `Helpers/TTMConfig.swift` |
 | Analytics events | `Helpers/TTMAnalytics.swift` |
 | Firebase setup | `AppDelegate.swift` (`configureFirebase()`) |
@@ -67,20 +68,20 @@ Guidance for Claude Code when working in this repository.
 - Use `L("key")` (defined in `TTMHelper.swift`) instead of `NSLocalizedString` directly
 - Device detection: use the global constants `IS_IPAD` and `IS_SMALL_SCREEN` (defined in `TTMHelper.swift`) — do not query `UIDevice` or `UIScreen` directly
 - Delay helper: `delay(_:closure:)` (defined in `TTMHelper.swift`) wraps `DispatchQueue.main.asyncAfter` — call as `delay(0.3) { ... }`
-- Colors: use `UIColor.ttmBlueColor`, `UIColor.ttmGreenColor`, `UIColor.ttmGrayColor` from extensions
-- Fonts: use `UIFont.ttm*` class methods (e.g. `UIFont.ttmRegularOfSize()`)
+- Colors: in SwiftUI use `Color.ttmBlue`, `Color.ttmGreen`, `Color.ttmGray` and `TTMMatchPlayer.swiftUIColor`; in UIKit `UIColor.ttm*Color`
+- Fonts: in SwiftUI use `Font.ttmBold/ttmHeavy/ttmBlack(_:)`; in UIKit `UIFont.ttm*` class methods
 
 ---
 
 ## Architectural rules
 
-- **Do not break the singleton pattern** for `TTMMatch` or `TTMSoundManager` — `ViewController` depends on `TTMMatch.currentMatch` being a shared instance
+- **Do not break the singleton pattern** for `TTMMatch` or `TTMSoundManager` — `MatchViewModel()` defaults to `TTMMatch.currentMatch`, the shared instance
 - **Do not add new dependencies** (SPM packages or CocoaPods) unless the user explicitly requests it — Firebase is the only one
 - **Firebase is configured from build settings, not `GoogleService-Info.plist`**: keys come from `Config/Secrets.xcconfig` (git-ignored; generated on Xcode Cloud by `ci_scripts/ci_pre_xcodebuild.sh`) → Info.plist → `AppDelegate.configureFirebase()`. Missing keys mean Firebase is silently skipped. Never commit `Secrets.xcconfig` or real keys
-- **Screen logic lives in `MatchViewModel`** (`@Observable`, `@MainActor`): user intents, the tap lockout, analytics and the derived UI state. `ViewController` only forwards input to it and renders its state in `updateUI()` — keep it that way, it is the first step of the SwiftUI migration. `TTMMatch` is `@Observable` too
+- **Screen logic lives in `MatchViewModel`** (`@Observable`, `@MainActor`): user intents, the tap lockout, analytics and the derived UI state. Views only call its intents and render its state. `TTMMatch` is `@Observable` too, so views may read the match directly. `Controllers/ViewController.swift`, `Main.storyboard` and the `TTMSelectableButton`/`TTMGameCell` xibs are no longer used and are removed in the next migration step — do not change them
 - **Analytics calls go through `TTMAnalytics`** — do not call `Analytics.logEvent` directly from controllers. `MatchViewModel` reports through the `TTMAnalyticsTracking` protocol (`TTMAnalyticsTracker` forwards to `TTMAnalytics`; tests pass a spy). Do not set user IDs or user properties; only aggregate, non-identifying events are collected (IDFV collection is disabled in Info.plist)
 - **Persistence is automatic**: model property changes trigger `didSet` which calls `save()` — do not add manual save calls in the controller
-- **Volume button handling** is encapsulated in `TTMVolumeButtonHandler`. It owns the `AVAudioSession` (`.playback` + `.mixWithOthers`) and the hidden `MPVolumeView` (HUD suppression). `ViewController.viewDidLoad` creates the handler and calls `start(true)`. `TTMVolumeButtonHandler` is *not* a singleton — it is owned by `ViewController`
+- **Volume button handling** is encapsulated in `TTMVolumeButtonHandler`. It owns the `AVAudioSession` (`.playback` + `.mixWithOthers`) and the hidden `MPVolumeView` (HUD suppression). `MatchScreen` creates the handler on appear and calls `start(true)`. `TTMVolumeButtonHandler` is *not* a singleton — it is owned by `MatchScreen`
 
 ---
 
@@ -101,8 +102,9 @@ Guidance for Claude Code when working in this repository.
 - `MatchViewModelTests` builds `MatchViewModel(match: fixture.match, analytics: AnalyticsSpy())`
 - Unit test suites are `@MainActor` because `TTMMatch` plays sounds through the `TTMSoundManager` singleton
 - UI tests launch with `-UITesting` (clean state, no Firebase, animations off). To start from a given score pass a `MatchSeed`, which goes to `TTM_UITEST_MATCH` in the same JSON format `TTMMatch.save()` writes. `restore()` resets a finished match, so seed one point before the event and tap once
-- Accessibility identifiers used by UI tests: `score.left`/`score.right` (value = current score), `settings`, `randomServe`, `game.N` (value = `"left-right"` once the game is finished). `undo.left`/`undo.right` are set but invisible to XCUITest (the undo button is a subview of the score `UIButton`), so `tapUndo(left:)` taps by position — switch it to the identifier once the score button is SwiftUI
-- On iPhone the action sheets appear as popovers without a Cancel button — dismiss with `dismissActionSheet()`
+- Accessibility identifiers used by UI tests: `score.left`/`score.right` (buttons, value = current score), `undo.left`/`undo.right` (only present once the serve is decided), `settings` (absent when the match is finished), `randomServe`, `game.N` (an `other` element, not a cell; value = `"left-right"` once the game is finished)
+- SwiftUI hit testing: a clear `fill` is not tappable — give buttons with a transparent background a `contentShape`. Add/remove controls with `if` instead of toggling `opacity`/`allowsHitTesting`: that left the undo button untappable in UI tests
+- On iPhone the `confirmationDialog`s appear as popovers without a Cancel button — dismiss with `dismissActionSheet()`
 - `-collect-test-diagnostics never` is needed: otherwise `xcodebuild` hangs in `simctl diagnose` after UI tests
 - The app ignores taps for `secondsToDeclineTaps` after each point/undo — use `tapAndSettle`
 - Test plans: `CITests` (scheme default, unit only) and `FullTests` (unit + UI). UI tests are marked non-parallelizable in the plan and scheme: on simulator clones the UI test runner failed to launch. Full run: `xcodebuild test -project "TT Match.xcodeproj" -scheme "TT Match" -destination 'platform=iOS Simulator,name=iPhone 17' -collect-test-diagnostics never -testPlan FullTests`
@@ -115,8 +117,8 @@ All serve logic lives in the `serve` computed property and related helpers in `T
 
 ### Adding a new player interaction
 1. Add an intent to `MatchViewModel` (it calls `TTMMatch` and reports analytics) and cover it in `MatchViewModelTests`
-2. Add the gesture recognizer or button action in `ViewController` that calls the intent
-3. Expose any new UI state as a `MatchViewModel` property and render it in `ViewController.updateUI()`
+2. Add the gesture or button in the SwiftUI view that calls the intent
+3. Expose any new UI state as a `MatchViewModel` property and read it in the view
 
 ---
 
