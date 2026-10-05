@@ -220,12 +220,51 @@ struct MatchViewModelTests {
     @Test func serveRandomizationStartsMatch() {
         #expect(viewModel.canRandomizeServe)
 
-        viewModel.beginServeRandomization()
+        #expect(viewModel.beginServeRandomization())
         let player = viewModel.completeServeRandomization()
+        #expect(viewModel.showsServeRandomizer)
+        viewModel.finishServeRandomization()
 
+        #expect(player != nil)
         #expect(match.firstServe == player)
         #expect(!viewModel.canRandomizeServe)
+        #expect(!viewModel.showsServeRandomizer)
         #expect(analytics.events == ["match_started:3"])
+    }
+
+    @Test func inputIsIgnoredWhileServeIsRandomized() {
+        viewModel.beginServeRandomization()
+        #expect(!viewModel.acceptsInput)
+
+        #expect(!viewModel.tap(.blue))
+        #expect(match.firstServe == nil)
+
+        viewModel.completeServeRandomization()
+        let firstServe = match.firstServe
+        viewModel.undo()
+        #expect(match.firstServe == firstServe)
+        #expect(firstServe != nil)
+
+        viewModel.finishServeRandomization()
+        #expect(viewModel.acceptsInput)
+    }
+
+    @Test func randomizationDoesNotOverrideDecidedServe() {
+        #expect(viewModel.beginServeRandomization())
+        match.firstServe = .blue
+
+        #expect(viewModel.completeServeRandomization() == nil)
+        #expect(match.firstServe == .blue)
+        #expect(analytics.events.isEmpty)
+    }
+
+    @Test func randomizationCannotStartTwiceOrWhenServeIsDecided() {
+        #expect(viewModel.beginServeRandomization())
+        #expect(!viewModel.beginServeRandomization())
+        viewModel.completeServeRandomization()
+        viewModel.finishServeRandomization()
+
+        #expect(!viewModel.beginServeRandomization())
     }
 
     @Test func setGameCountUpdatesSettings() {

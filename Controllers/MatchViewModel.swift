@@ -23,8 +23,14 @@ final class MatchViewModel {
 
     let match: TTMMatch
 
-    /// True for `secondsToDeclineTaps` after each point or undo; the UI ignores input meanwhile.
+    /// True for `secondsToDeclineTaps` after each point or undo.
     private(set) var isInputLocked = false
+
+    /// True from the start to the end of the serve randomization animation.
+    private(set) var isRandomizingServe = false
+
+    /// False while input is locked or the serve is being randomized; the UI ignores touches meanwhile.
+    var acceptsInput: Bool { !isInputLocked && !isRandomizingServe }
 
     /// How many animated points were scored on the left and on the right button. The UI animates a button
     /// when its counter changes. Counted per side, not per player: players switch sides between games and
@@ -58,8 +64,8 @@ final class MatchViewModel {
         match.matchFinished ? nil : match.gameWinner
     }
 
-    /// The serve is not decided yet: offer to pick it at random.
-    var showsServeRandomizer: Bool { match.serve == nil }
+    /// The serve is not decided yet (or is being randomized): show the randomizer.
+    var showsServeRandomizer: Bool { match.serve == nil || isRandomizingServe }
 
     /// Finished games are shown once the match has started.
     var showsGames: Bool { match.serve != nil }
@@ -80,10 +86,11 @@ final class MatchViewModel {
     // MARK: - Intents
 
     /// A tap on a player's score (touch, accessibility action or hardware volume button).
-    /// Ignored while input is locked. Returns true when the point should be animated on that player's button.
+    /// Ignored while input is locked or the serve is being randomized.
+    /// Returns true when the point should be animated on that player's button.
     @discardableResult
     func tap(_ player: TTMMatchPlayer) -> Bool {
-        guard !isInputLocked else { return false }
+        guard acceptsInput else { return false }
 
         let hasServe = match.serve != nil
         let gameFinished = match.gameFinished
@@ -126,9 +133,9 @@ final class MatchViewModel {
         tap(match.players[0])
     }
 
-    /// Ignored while input is locked.
+    /// Ignored while input is locked or the serve is being randomized.
     func undo() {
-        guard !isInputLocked else { return }
+        guard acceptsInput else { return }
         if match.firstServe != nil {
             analytics.undoUsed()
         }
@@ -139,19 +146,32 @@ final class MatchViewModel {
     /// Whether the serve can still be picked at random.
     var canRandomizeServe: Bool { match.firstServe == nil }
 
-    /// Call when the randomization animation starts.
-    func beginServeRandomization() {
+    /// Call when the randomization animation should start. Returns false when it must not:
+    /// the serve is already decided, a randomization is running, or input is locked.
+    /// Until `finishServeRandomization()` taps and undo are ignored.
+    @discardableResult
+    func beginServeRandomization() -> Bool {
+        guard canRandomizeServe, acceptsInput else { return false }
+        isRandomizingServe = true
         TTMSoundManager.sharedManager.playSystemSound(type: TTMSoundType.tap)
+        return true
     }
 
-    /// Call when the randomization animation ends: picks the first server and starts the match.
+    /// Call during the animation: picks the first server and starts the match.
+    /// Does nothing (returns nil) unless a randomization is running and the serve is still undecided.
     @discardableResult
-    func completeServeRandomization() -> TTMMatchPlayer {
+    func completeServeRandomization() -> TTMMatchPlayer? {
+        guard isRandomizingServe, match.firstServe == nil else { return nil }
         TTMSoundManager.sharedManager.playSystemSound(type: TTMSoundType.tapServiceChanged)
         let player = TTMMatchPlayer.rand()
         match.firstServe = player
         analytics.matchStarted(gameCount: match.settings.gameCount)
         return player
+    }
+
+    /// Call when the randomization animation is over: input is accepted again.
+    func finishServeRandomization() {
+        isRandomizingServe = false
     }
 
     func setGameCount(_ gameCount: Int) {

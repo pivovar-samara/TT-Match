@@ -197,13 +197,12 @@ class ViewController: UIViewController {
     }
     
     @IBAction func randomizeServe(_ sender: UIButton) {
-        guard self.viewModel.canRandomizeServe else { return }
-        
-        self.viewModel.beginServeRandomization()
+        guard self.viewModel.beginServeRandomization() else { return }
         
         self.animateRandomizationServe {[weak self] in
             guard let strongSelf = self else { return }
             strongSelf.viewModel.completeServeRandomization()
+            strongSelf.viewModel.finishServeRandomization()
             strongSelf.updateUI(handleRandomServe: false)
         }
     }

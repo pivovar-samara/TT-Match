@@ -10,7 +10,6 @@ struct MatchScreen: View {
 
     @State private var viewModel: MatchViewModel
     @State private var volumeHandler: TTMVolumeButtonHandler?
-    @State private var isRandomizingServe = false
     @State private var showsGameCountDialog = false
     @State private var showsResetDialog = false
 
@@ -35,7 +34,7 @@ struct MatchScreen: View {
         .background((viewModel.matchWinner?.swiftUIColor ?? .white).ignoresSafeArea())
         .contentShape(Rectangle())
         .onTapGesture(perform: viewModel.backgroundTap)
-        .allowsHitTesting(!viewModel.isInputLocked)
+        .allowsHitTesting(viewModel.acceptsInput)
         .onChange(of: viewModel.isIdleTimerDisabled, initial: true) { _, isDisabled in
             UIApplication.shared.isIdleTimerDisabled = isDisabled
         }
@@ -51,15 +50,11 @@ struct MatchScreen: View {
             }
             .background(RoundedRectangle(cornerRadius: 36.0).fill(viewModel.gameWinner?.swiftUIColor ?? .clear))
 
-            if viewModel.showsServeRandomizer || isRandomizingServe {
+            if viewModel.showsServeRandomizer {
                 RandomServeButton(
-                    isEnabled: viewModel.canRandomizeServe,
-                    onStart: {
-                        isRandomizingServe = true
-                        viewModel.beginServeRandomization()
-                    },
+                    onStart: viewModel.beginServeRandomization,
                     onPick: { viewModel.completeServeRandomization() },
-                    onFinish: { isRandomizingServe = false })
+                    onFinish: viewModel.finishServeRandomization)
             }
         }
     }

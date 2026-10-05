@@ -8,10 +8,8 @@ import SwiftUI
 /// Picks the first server at random: the arrows spin, then fly apart while the match starts.
 struct RandomServeButton: View {
 
-    /// Whether a tap may start the randomization.
-    let isEnabled: Bool
-    /// The spin starts.
-    let onStart: () -> Void
+    /// The spin is about to start. Returns false when the randomization must not start.
+    let onStart: () -> Bool
     /// Time to pick the server (shortly after the spin, while the arrows fly apart).
     let onPick: () -> Void
     /// The animation is over; the button can go away.
@@ -46,9 +44,8 @@ struct RandomServeButton: View {
     }
 
     private func start() {
-        guard isEnabled, !isAnimating else { return }
+        guard !isAnimating, onStart() else { return }
         isAnimating = true
-        onStart()
 
         withAnimation(.easeInOut(duration: 1.5)) {
             scale = 2.0
@@ -62,6 +59,12 @@ struct RandomServeButton: View {
                 scale = 10.0
                 opacity = 0.0
             } completion: {
+                // Back to the initial state, in case this view stays on screen (the serve is undecided again).
+                isAnimating = false
+                isExploding = false
+                scale = 1.0
+                rotation = .zero
+                opacity = 1.0
                 onFinish()
             }
         }
