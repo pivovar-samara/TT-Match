@@ -67,6 +67,21 @@ struct MatchViewModelTests {
         #expect(match.blueScore == 0)
     }
 
+    @Test func earlierTimerDoesNotEndLaterLock() {
+        var scheduled: [() -> Void] = []
+        let viewModel = MatchViewModel(match: match, analytics: analytics, schedule: { _, closure in scheduled.append(closure) })
+
+        viewModel.tap(.green)
+        viewModel.undo()
+        #expect(scheduled.count == 2)
+
+        scheduled[0]()
+        #expect(viewModel.isInputLocked)
+
+        scheduled[1]()
+        #expect(!viewModel.isInputLocked)
+    }
+
     @Test func gamePointFinishesGameWithoutAnimation() {
         match.start()
         match.score(.green, times: 10)
