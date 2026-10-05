@@ -33,8 +33,9 @@ struct RandomServeButton: View {
                     .renderingMode(.template)
                     .foregroundStyle(Color.ttmGray)
                     .frame(width: 128.0, height: 128.0)
-                    .ttmCircleBackground(Color.ttmGray.opacity(0.2))
-                    // Opaque underlay, so the score button borders do not show through.
+                    // A plain fill, not Liquid Glass: interactive glass resizes itself on touch, which fights
+                    // the spin and scale animation. The opaque underlay hides the score button borders.
+                    .background(Circle().fill(Color.ttmGray.opacity(0.2)))
                     .background(Circle().fill(Color.ttmBackground))
             }
             .buttonStyle(.plain)
