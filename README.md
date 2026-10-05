@@ -106,7 +106,7 @@ iPhone runs in **landscape only**. iPad supports all orientations.
 The scheme has two test plans: `CITests` (default, unit tests only — fast) and `FullTests` (unit + UI, ~3 min).
 
 ```bash
-xcodebuild test -project "TT Match.xcodeproj" -scheme "TT Match" -destination 'platform=iOS Simulator,name=iPhone 17' -parallel-testing-enabled NO -collect-test-diagnostics never -testPlan FullTests
+xcodebuild test -project "TT Match.xcodeproj" -scheme "TT Match" -destination 'platform=iOS Simulator,name=iPhone 17' -collect-test-diagnostics never -testPlan FullTests
 ```
 
 ---

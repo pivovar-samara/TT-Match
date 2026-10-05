@@ -20,6 +20,7 @@
       }
     },
     {
+      "parallelizable" : false,
       "target" : {
         "containerPath" : "container:TT Match.xcodeproj",
         "identifier" : "485F29553072C1A900546523",

@@ -102,7 +102,7 @@ Guidance for Claude Code when working in this repository.
 - On iPhone the action sheets appear as popovers without a Cancel button — dismiss with `dismissActionSheet()`
 - `-collect-test-diagnostics never` is needed: otherwise `xcodebuild` hangs in `simctl diagnose` after UI tests
 - The app ignores taps for `secondsToDeclineTaps` after each point/undo — use `tapAndSettle`
-- Test plans: `CITests` (scheme default, unit only) and `FullTests` (unit + UI). Full run: `xcodebuild test -project "TT Match.xcodeproj" -scheme "TT Match" -destination 'platform=iOS Simulator,name=iPhone 17' -parallel-testing-enabled NO -collect-test-diagnostics never -testPlan FullTests`
+- Test plans: `CITests` (scheme default, unit only) and `FullTests` (unit + UI). UI tests are marked non-parallelizable in the plan and scheme: on simulator clones the UI test runner failed to launch. Full run: `xcodebuild test -project "TT Match.xcodeproj" -scheme "TT Match" -destination 'platform=iOS Simulator,name=iPhone 17' -collect-test-diagnostics never -testPlan FullTests`
 
 ### Changing game settings defaults
 Edit `TTMMatchSettings.swift` — the defaults are defined there as property initializers.
