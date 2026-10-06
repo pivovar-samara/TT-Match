@@ -116,6 +116,16 @@ Guidance for Claude Code when working in this repository.
 - The app ignores taps for `secondsToDeclineTaps` after each point/undo — use `tapAndSettle`
 - Test plans: `CITests` (scheme default, unit only) and `FullTests` (unit + UI). UI tests are marked non-parallelizable in the plan and scheme: on simulator clones the UI test runner failed to launch. Full run: `xcodebuild test -project "TT Match.xcodeproj" -scheme "TT Match" -destination 'platform=iOS Simulator,name=iPhone 17' -collect-test-diagnostics never -testPlan FullTests`
 
+### Keeping README.md current
+`README.md` is the public description of the app — update it in the same change whenever you touch what it describes:
+- user-visible behavior → **Features** and **Input Methods** (gestures, buttons, volume buttons, dialogs)
+- adding, removing or renaming a source file or folder → the **Architecture** tree and its one-line descriptions
+- tests, test plans or the test command → **Tests**
+- toolchain, deployment target, dependencies, Firebase/build config → **Requirements** and **Building**
+- a limitation lifted or introduced → **Known Limitations**
+
+Do not put the app version or release notes in `README.md`: versions live in `MARKETING_VERSION` (project settings) and on GitHub Releases. When this file's "Key files" table or rules change, check whether the README says the same thing.
+
 ### Changing game settings defaults
 Edit `TTMMatchSettings.swift` — the defaults are defined there as property initializers.
 
